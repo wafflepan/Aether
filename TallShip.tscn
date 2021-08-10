@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://TallShip.gd" type="Script" id=1]
+[ext_resource path="res://ship1.png" type="Texture" id=2]
+[ext_resource path="res://enemypip_wip.png" type="Texture" id=3]
+[ext_resource path="res://ShipTurret.tscn" type="PackedScene" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://WeaponProjectile.tscn" type="PackedScene" id=6]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 0.109091 ), 0.0, 0.0, 0, 0, Vector2( 0.680412, 0.454545 ), 1.67081, 1.67081, 0, 0, Vector2( 0.989691, 1 ), 0.0, 0.0, 0, 0 ]
+
+[node name="TallShip" type="KinematicBody2D"]
+script = ExtResource( 1 )
+
+[node name="ShipSprite" type="Sprite" parent="."]
+rotation = 1.5708
+texture = ExtResource( 2 )
+
+[node name="EnginePosition" type="Position2D" parent="ShipSprite"]
+position = Vector2( 0, 34.487 )
+rotation = -1.5708
+
+[node name="Line2D" type="Line2D" parent="."]
+z_index = -1
+width = 25.0
+width_curve = SubResource( 1 )
+default_color = Color( 0.227451, 0.819608, 0.792157, 0.478431 )
+joint_mode = 1
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="WaypointPath" type="Line2D" parent="."]
+z_index = -1
+width = 5.0
+default_color = Color( 0.4, 0.501961, 1, 1 )
+joint_mode = 1
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+
+[node name="WaypointSprite" type="Sprite" parent="."]
+visible = false
+position = Vector2( -310.899, -317.641 )
+texture = ExtResource( 3 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2( 0.6, 0.6 )
+
+[node name="Hardpoints" type="Node2D" parent="."]
+
+[node name="ShipTurret" parent="Hardpoints" instance=ExtResource( 4 )]
+position = Vector2( 48, 0 )
+projectile = ExtResource( 6 )
+
+[node name="TargetingSprite" type="Sprite" parent="."]
+visible = false
+scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 5 )
