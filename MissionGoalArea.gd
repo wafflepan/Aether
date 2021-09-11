@@ -46,5 +46,5 @@ func _on_MissionGoalArea_body_entered(body):
 	if body in validobjects or groupsCheck(body): #Make sure it's a valid entity
 		if type == goal_types.ON_ENTRY_ANY:
 			print(body.name)
-			emit_signal("goal_completed")
+			emit_signal("goal_completed",self)
 			queue_free()

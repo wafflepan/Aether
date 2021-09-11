@@ -10,19 +10,25 @@ func _ready():
 	startTweens()
 
 func chooseTarget(tg):
+	print("Chose Target")
 	visible=true
 	target=tg
-	if target.has_signal("disable_target"):
-		target.connect("disable_target",self,"clearTarget")
+#	if target.has_signal("disable_target"):
+#		target.connect("disable_target",self,"onTargetDisable")
 
 func _process(delta):
 	if target:
+#		print(target)
 		self.position=target.position
+
+func onTargetDisable(_target):
+	clearTarget()
 
 func clearTarget():
 	self.visible=false
-	if target and target.has_signal("disable_target"):
-		target.disconnect("disable_target",self,"clearTarget")
+#	if target and target.has_signal("disable_target"):
+#		target.disconnect("disable_target",self,"clearTarget")
+#	print("Cleared Target")
 	target=null
 
 func startTweens():

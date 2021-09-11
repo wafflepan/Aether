@@ -56,6 +56,7 @@ export var aiType = 0
 
 var hullpointsmax = 30
 var hullpoints = hullpointsmax
+var unit_disabled=false
 
 export(Script) var SHIP_CONTROLLER #Component for player or AI input to a ship
 
@@ -171,9 +172,10 @@ func updateEngineParticles():
 signal disable_target
 signal unit_destroyed
 func die():
+	unit_disabled=true
 	self.z_index-=1
-	emit_signal("unit_destroyed") #For tracking elimination mission goals
-	emit_signal("disable_target")
+	emit_signal("unit_destroyed",self) #For tracking elimination mission goals
+	emit_signal("disable_target",self)
 	var randspin = deg2rad(rand_range(-30,30))
 	var randduration = rand_range(5,7)
 	$Tween.interpolate_property($ShipSprite,"modulate",self.modulate,Color(0.5,0.5,0.5),randduration,Tween.TRANS_LINEAR,Tween.EASE_IN)

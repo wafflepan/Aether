@@ -41,7 +41,7 @@ class MissionObjective:
 	func getText():
 		return objective_text
 	
-	func onGoalComplete():
+	func onGoalComplete(_target):
 		pass
 		#TODO
 		#for now, only have partial/single goal objectives

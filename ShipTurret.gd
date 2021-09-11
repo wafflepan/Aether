@@ -52,6 +52,16 @@ var isFiring = false
 #	var projectile_drag
 #	var projectile_lifetime
 
+func setTarget(t):
+	if !t:
+		return
+	currenttarget=t
+	currenttarget.connect("disable_target",self,"removeCurrentTarget")
+
+func removeCurrentTarget(ship):
+	currenttarget.disconnect("disable_target",self,"removeCurrentTarget")
+	currenttarget=null
+
 func _ready():
 	loadTurretData()
 	turret_owner = get_parent().get_parent()
@@ -80,9 +90,6 @@ func setupSprites(data):
 	$Base.texture=data.base_texture
 	$TurretNode/Turret.texture=data.turret_texture
 
-func setTarget(tg):
-	currenttarget=tg
-
 func showArc():
 	$DisplayPolygon.visible=true
 
@@ -95,8 +102,9 @@ func _process(delta):
 	if reload > 0:
 		reload  -= delta
 	if currenttarget==null:
-		currenttarget = scanForTargets()
+		setTarget( scanForTargets() )
 	else:
+#		print(currenttarget)
 		var facing = (Vector2(1,0).rotated(self.global_rotation).angle_to(currenttarget.global_position-global_position))
 		if abs($TurretNode.rotation-facing) < deg2rad(turnspeed)*delta:
 			$TurretNode.rotation = facing
@@ -169,10 +177,11 @@ var targetpoly = []
 func scanForTargets():
 	#Implementation 1:
 	#Get closest target and track
+	#TODO: specifically check if the target is in an overlapping fire field and stuff.
 	var dist = INF
 	var closest = null
 	for target in turret_owner.getTargetList():
-		if !target:
+		if !target or target.unit_disabled:
 			turret_owner.removeTarget(target)
 		else:
 			var dist_to = self.global_position.distance_squared_to(target.global_position)
