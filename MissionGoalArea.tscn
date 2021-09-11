@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://cross-grid-line-pattern-icon-texture-sweets-food-confectionery-transparent-png-1784439.png" type="Texture" id=1]
+[ext_resource path="res://MissionGoalArea.gd" type="Script" id=2]
+
+[node name="MissionGoalArea" type="Area2D"]
+collision_layer = 0
+script = ExtResource( 2 )
+
+[node name="Collider" type="CollisionPolygon2D" parent="."]
+
+[node name="Polygon" type="Polygon2D" parent="."]
+texture = ExtResource( 1 )
+polygon = PoolVector2Array( -200, -200, 200, -200, 200, 200, -200, 200 )
+[connection signal="body_entered" from="." to="." method="_on_MissionGoalArea_body_entered"]

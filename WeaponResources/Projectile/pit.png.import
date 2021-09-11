@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/bullet1.png-50fdcf404dd4043b09019190a00325c2.stex"
+path="res://.import/pit.png-f023ba8010e27a2602de3f8f140b5f5d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://bullet1.png"
-dest_files=[ "res://.import/bullet1.png-50fdcf404dd4043b09019190a00325c2.stex" ]
+source_file="res://WeaponResources/Projectile/pit.png"
+dest_files=[ "res://.import/pit.png-f023ba8010e27a2602de3f8f140b5f5d.stex" ]
 
 [params]
 

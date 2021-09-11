@@ -1,0 +1,47 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://SelectionIndicator.tscn" type="PackedScene" id=1]
+[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://SelectorTest.gd" type="Script" id=3]
+[ext_resource path="res://SelectionTestObject.gd" type="Script" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 30, 30 )
+
+[node name="SelectorTest" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Area2D" parent="."]
+position = Vector2( 293.804, 113.93 )
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Sprite"]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite"]
+shape = SubResource( 1 )
+
+[node name="Sprite2" type="Area2D" parent="."]
+position = Vector2( 90.2414, 268.104 )
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Sprite2"]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2"]
+shape = SubResource( 1 )
+
+[node name="Sprite3" type="Area2D" parent="."]
+position = Vector2( 695.591, 268.771 )
+script = ExtResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Sprite3"]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite3"]
+shape = SubResource( 1 )
+
+[node name="SelectionIndicator" parent="." instance=ExtResource( 1 )]
+[connection signal="input_event" from="Sprite" to="Sprite" method="_on_Sprite_input_event"]
+[connection signal="input_event" from="Sprite2" to="Sprite2" method="_on_Sprite_input_event"]
+[connection signal="input_event" from="Sprite3" to="Sprite3" method="_on_Sprite_input_event"]

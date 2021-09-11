@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/turret_1.png-9f18ca3f62f26b8d9ce946ab78b34acf.stex"
+path="res://.import/pngkey.com-glowing-light-png-1538032.png-be230badb7e55fb5a006dffb262e022b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://turret_1.png"
-dest_files=[ "res://.import/turret_1.png-9f18ca3f62f26b8d9ce946ab78b34acf.stex" ]
+source_file="res://pngkey.com-glowing-light-png-1538032.png"
+dest_files=[ "res://.import/pngkey.com-glowing-light-png-1538032.png-be230badb7e55fb5a006dffb262e022b.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=false
+flags/filter=true
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
