@@ -18,6 +18,9 @@ func registerShips():
 func assignPlayerShip(sh):
 	$UI.setPlayerShip(sh)
 
+func getPlayerCamera():
+	return playercontroller.ship.get_node("Camera")
+
 func shipRightClicked(sh):
 	pass
 

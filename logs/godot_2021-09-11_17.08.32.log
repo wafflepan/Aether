@@ -5,31 +5,65 @@ OpenGL ES Batching: ON
 Objective Type: AREA
 Objective Type: AREA
 Objective Type: AREA
-Objective Type: AREA
 Objective Type: ELIMINATE
-29
-145
+24
+128
 Throttle Values: [0, 13.333333, 26.666667, 40]
 Loaded a tallship with no ship controller
 Throttle Values: [0, 13.333333, 26.666667, 40]
 Registered Ship: PatrolShip
 Registered Ship: TallShip
 Finished Loading Ship
-Changed Throttle Setting To 1  ,  0
-Changed Throttle Setting To 2  ,  13.333333
-Changed Throttle Setting To 3  ,  26.666667
-TallShip
 Ship Clicked: PatrolShip
 Chose Target
-Changed Throttle Setting To 2  ,  40
-Changed Throttle Setting To 1  ,  26.666667
-Changed Throttle Setting To 2  ,  13.333333
-Changed Throttle Setting To 3  ,  26.666667
-Changed Throttle Setting To 3  ,  40
-Changed Throttle Setting To 3  ,  40
-Changed Throttle Setting To 2  ,  40
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Changed Throttle Setting To 1  ,  0
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Bullet hit ProceduralIsland
 Bullet hit PatrolShip
 Bullet hit PatrolShip
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Changed Throttle Setting To 0  ,  13.333333
+Changed Throttle Setting To 1  ,  0
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Changed Throttle Setting To 0  ,  13.333333
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Changed Throttle Setting To 1  ,  0
+Changed Throttle Setting To 0  ,  13.333333
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Bullet hit PatrolShip
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Bullet hit PatrolShip
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
+Bullet hit PatrolShip
+Bullet hit PatrolShip
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
+Bullet hit PatrolShip
 **ERROR**: Signal 'objective_completed' is already connected to given method 'onObjectiveComplete' in that object.
    At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
 Objective Type: AREA
@@ -45,6 +79,8 @@ Objective Type: AREA
 Objective Type: AREA
 **ERROR**: Signal 'goal_completed' is already connected to given method 'onGoalComplete' in that object.
    At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
+Bullet hit ProceduralIsland
+Bullet hit ProceduralIsland
 **ERROR**: Condition "_first != __null" is true.
    At: ./core/self_list.h:112:~List() - Condition "_first != __null" is true.
 **ERROR**: Condition "_first != __null" is true.

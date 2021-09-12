@@ -1,0 +1,43 @@
+Godot Engine v3.3.2.stable.official - https://godotengine.org
+OpenGL ES 3.0 Renderer: NVIDIA GeForce RTX 3060 Laptop GPU/PCIe/SSE2
+OpenGL ES Batching: ON
+ 
+Objective Type: AREA
+Objective Type: AREA
+Objective Type: AREA
+Objective Type: ELIMINATE
+38
+208
+Throttle Values: [0, 13.333333, 26.666667, 40]
+Loaded a tallship with no ship controller
+Throttle Values: [0, 13.333333, 26.666667, 40]
+Registered Ship: PatrolShip
+Registered Ship: TallShip
+Finished Loading Ship
+Ship Clicked: PatrolShip
+Chose Target
+Bullet hit PatrolShip
+Bullet hit PatrolShip
+**ERROR**: Signal 'objective_completed' is already connected to given method 'onObjectiveComplete' in that object.
+   At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
+Objective Type: AREA
+**ERROR**: Signal 'goal_completed' is already connected to given method 'onGoalComplete' in that object.
+   At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
+**ERROR**: Signal 'objective_completed' is already connected to given method 'onObjectiveComplete' in that object.
+   At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
+Objective Type: AREA
+**ERROR**: Signal 'goal_completed' is already connected to given method 'onGoalComplete' in that object.
+   At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
+**ERROR**: Signal 'objective_completed' is already connected to given method 'onObjectiveComplete' in that object.
+   At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
+Objective Type: AREA
+**ERROR**: Signal 'goal_completed' is already connected to given method 'onGoalComplete' in that object.
+   At: core/object.cpp:1512:connect() - Method failed. Returning: ERR_INVALID_PARAMETER
+**ERROR**: Condition "_first != __null" is true.
+   At: ./core/self_list.h:112:~List() - Condition "_first != __null" is true.
+**ERROR**: Condition "_first != __null" is true.
+   At: ./core/self_list.h:112:~List() - Condition "_first != __null" is true.
+**WARNING**: ObjectDB instances leaked at exit (run with --verbose for details).
+   At: core/object.cpp:2132:cleanup() - ObjectDB instances leaked at exit (run with --verbose for details).
+**ERROR**: Resources still in use at exit (run with --verbose for details).
+   At: core/resource.cpp:450:clear() - Resources still in use at exit (run with --verbose for details).

@@ -118,13 +118,6 @@ curve = SubResource( 6 )
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource( 7 )
 
-[node name="ShipPanel" parent="UI" instance=ExtResource( 6 )]
-theme = ExtResource( 10 )
-
-[node name="DialogReadout" parent="UI" instance=ExtResource( 8 )]
-
-[node name="TargetDisplay" parent="UI" instance=ExtResource( 9 )]
-
 [node name="MissionInfo" type="Control" parent="UI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -207,12 +200,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextureRect" type="TextureRect" parent="UI/MissionInfo/Pointers"]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="PointerTemplate" type="TextureRect" parent="UI/MissionInfo"]
+visible = false
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 140.0
+margin_bottom = 140.0
 rect_rotation = 90.0
 texture = ExtResource( 15 )
 expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipPanel" parent="UI" instance=ExtResource( 6 )]
+theme = ExtResource( 10 )
+
+[node name="DialogReadout" parent="UI" instance=ExtResource( 8 )]
+visible = false
+
+[node name="TargetDisplay" parent="UI" instance=ExtResource( 9 )]
 
 [node name="MissionData" type="Node2D" parent="."]
 

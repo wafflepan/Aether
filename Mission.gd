@@ -31,6 +31,8 @@ class MissionObjective:
 	
 	var isClearedAtPhaseEnd=true #Used for optional objectives that can persist for entire missions
 	var isOptional = false
+	var isPointerObjective = true #Decide whether or not an arrow points at this objective at all times
+	#TODO: Modify this so it can be stuff like search areas, or changing pointer strength/appearance time
 	
 	var objective_text = "Proceed to Location Alpha"
 	
@@ -83,7 +85,7 @@ func createAreaObjective(where,desc=null): #Quick hacky utility for making playe
 
 func setupMission(mng):
 	missionmanager=mng
-	objectives.append(createAreaObjective(Vector2(700,0)))
+#	objectives.append(createAreaObjective(Vector2(700,0)))
 	
 	var newobj = MissionObjective.new()
 	newobj.objective_type=newobj.objective_types.ELIMINATE
