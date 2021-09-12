@@ -101,6 +101,7 @@ normal_map = SubResource( 5 )
 centered = false
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+visible = false
 motion_scale = Vector2( 0.2, 0.2 )
 motion_mirroring = Vector2( 2048, 2048 )
 
@@ -208,6 +209,7 @@ margin_right = 140.0
 margin_bottom = 140.0
 rect_rotation = 90.0
 rect_scale = Vector2( 0.7, 0.55 )
+mouse_filter = 2
 texture = ExtResource( 15 )
 expand = true
 __meta__ = {

@@ -17,6 +17,7 @@ func registerShips():
 			child.registerSignals(self)
 
 func assignPlayerShip(sh):
+	$UI/MissionInfo.camera=camera
 	$UI.setPlayerShip(sh)
 	remove_child(camera)
 	sh.add_child(camera)

@@ -9,6 +9,7 @@ var active_objectives = [] #Everything currently displayed
 var pointer_targets = [] #Things to point at
 
 #onready var camera = get_parent().get_parent().getPlayerCamera()
+var camera
 onready var objectivelist = $MissionObjectives/MarginContainer/ScrollContainer/Objectives
 onready var missiontitle = $MissionObjectives/CenterContainer/MissionName
 
@@ -51,8 +52,9 @@ func _process(delta):
 	for t in pointer_targets:
 #		var list = $Pointers.get_children()
 #		var t = obj.target
+		var zoomscalar = camera.zoom.x #Zoom on player cam is symmetric
 		var p = $Pointers.get_child(pointer_targets.find(t)) #+1 offset to ignore template
-		var pos = (t.get_global_transform_with_canvas().origin-Vector2(p.rect_size.x/2,p.rect_size.y) + Vector2(0,-50))
+		var pos = (t.get_global_transform_with_canvas().origin-Vector2(p.rect_size.x/2,p.rect_size.y) + Vector2(0,-50)/(zoomscalar*2))
 		var screensize = get_viewport_rect().size
 		var clampx = clamp(pos.x,0+screensize.x*.15,screensize.x*.82)
 		var clampy = clamp(pos.y,0+screensize.y*.15,screensize.y*.85)

@@ -2,12 +2,24 @@ Godot Engine v3.2.3.stable.official - https://godotengine.org
 OpenGL ES 3.0 Renderer: GeForce RTX 2080 SUPER/PCIe/SSE2
  
 Objective Type: ELIMINATE
-27
-150
+Objective Type: ELIMINATE
+Objective Type: ELIMINATE
+Objective Type: ELIMINATE
+22
+106
+Throttle Values: [0, 13.333333, 26.666667, 40]
+Loaded a tallship with no ship controller
+Throttle Values: [0, 13.333333, 26.666667, 40]
+Loaded a tallship with no ship controller
+Throttle Values: [0, 13.333333, 26.666667, 40]
+Loaded a tallship with no ship controller
 Throttle Values: [0, 13.333333, 26.666667, 40]
 Loaded a tallship with no ship controller
 Throttle Values: [0, 13.333333, 26.666667, 40]
 Registered Ship: PatrolShip
+Registered Ship: PatrolShip2
+Registered Ship: PatrolShip3
+Registered Ship: PatrolShip4
 Registered Ship: TallShip
 Finished Loading Ship
 **ERROR**: Condition "_first != __null" is true.
