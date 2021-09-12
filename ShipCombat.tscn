@@ -55,7 +55,7 @@ _data = {
 
 [sub_resource type="Animation" id=8]
 resource_name = "fade_black"
-length = 4.0
+length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
@@ -63,7 +63,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 4 ),
+"times": PoolRealArray( 0, 2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 1 ) ]
@@ -71,7 +71,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id=9]
 resource_name = "unfade_black"
-length = 4.0
+length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("ColorRect:color")
 tracks/0/interp = 1
@@ -79,7 +79,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 4 ),
+"times": PoolRealArray( 0, 2 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
@@ -184,8 +184,8 @@ size_flags_vertical = 4
 theme = ExtResource( 10 )
 custom_fonts/mono_font = ExtResource( 14 )
 bbcode_enabled = true
-bbcode_text = "[ghost freq=1.0 span=1.0]Blah Blah[/ghost]"
-text = "[ghost freq=1.0 span=1.0]Blah Blah[/ghost]"
+bbcode_text = "Blah Blah"
+text = "Blah Blah"
 fit_content_height = true
 custom_effects = [ ExtResource( 13 ) ]
 __meta__ = {
@@ -207,11 +207,18 @@ margin_top = 100.0
 margin_right = 140.0
 margin_bottom = 140.0
 rect_rotation = 90.0
+rect_scale = Vector2( 0.7, 0.55 )
 texture = ExtResource( 15 )
 expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Label" type="Label" parent="UI/MissionInfo/PointerTemplate"]
+visible = false
+margin_right = 40.0
+margin_bottom = 20.0
+text = "BLAH BLAH"
 
 [node name="ShipPanel" parent="UI" instance=ExtResource( 6 )]
 theme = ExtResource( 10 )
@@ -229,7 +236,16 @@ position = Vector2( 235.969, -220.867 )
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="PatrolShip" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 120.69, -244.627 )
+position = Vector2( 107.039, -186.01 )
+
+[node name="PatrolShip2" parent="Entities" instance=ExtResource( 1 )]
+position = Vector2( 400.584, -239.811 )
+
+[node name="PatrolShip3" parent="Entities" instance=ExtResource( 1 )]
+position = Vector2( -141.2, -284.173 )
+
+[node name="PatrolShip4" parent="Entities" instance=ExtResource( 1 )]
+position = Vector2( 120.253, -371.953 )
 
 [node name="TallShip" parent="Entities" groups=[
 "player",
@@ -237,13 +253,6 @@ position = Vector2( 120.69, -244.627 )
 position = Vector2( 116.228, -57.6414 )
 isPlayer = true
 SHIP_CONTROLLER = ExtResource( 5 )
-
-[node name="Camera2D2" type="Camera2D" parent="Entities/TallShip"]
-position = Vector2( -116.228, 57.6414 )
-current = true
-smoothing_enabled = true
-smoothing_speed = 8.0
-script = ExtResource( 2 )
 
 [node name="ScreenTransition" type="CanvasLayer" parent="."]
 
@@ -259,3 +268,9 @@ __meta__ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ScreenTransition"]
 anims/fade_black = SubResource( 8 )
 anims/unfade_black = SubResource( 9 )
+
+[node name="Camera" type="Camera2D" parent="."]
+current = true
+smoothing_enabled = true
+smoothing_speed = 8.0
+script = ExtResource( 2 )

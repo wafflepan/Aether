@@ -3,6 +3,7 @@ extends Node2D
 #Signal manager for selection, destruction of ships, etc.
 
 var playercontroller = null
+onready var camera = $Camera
 onready var selector = $SelectionIndicator
 
 func _ready():
@@ -17,6 +18,8 @@ func registerShips():
 
 func assignPlayerShip(sh):
 	$UI.setPlayerShip(sh)
+	remove_child(camera)
+	sh.add_child(camera)
 
 func getPlayerCamera():
 	return playercontroller.ship.get_node("Camera")

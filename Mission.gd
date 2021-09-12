@@ -7,6 +7,8 @@ var mission_name = "Test Mission 1"
 var phaseNames = ["Test Phase 1","Test Phase 2"]
 var objectives = []
 
+
+#ACTIVE OBJECTIVES FOR A GIVEN PHASE
 var required_objectives = [] #Mandatory for completion of current phase
 var optional_objectives = []
 
@@ -22,6 +24,7 @@ var extraction_type #How does the player ship leave at the end of the battle?
 
 signal mission_complete
 signal update_mission_objectives
+signal phase_complete
 
 class MissionObjective:
 	signal objective_completed
@@ -53,6 +56,43 @@ class MissionObjective:
 		emit_signal("objective_completed",self)
 		#Once an objective is completed, inform the mission manager
 
+
+func setupMission(mng): #Placeholder function to create mission parameters (this'll be done by the mission builder system later)
+	missionmanager=mng
+#	objectives.append(createAreaObjective(Vector2(700,0))) #Basic Area Entry
+	
+	#Kill Patrol Ship Mission (handcoded)
+	var newobj = MissionObjective.new()
+	newobj.objective_type=newobj.objective_types.ELIMINATE
+	newobj.objective_text="Eliminate Enemy Vessel"
+	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip")
+	objectives.append(newobj)
+	
+	newobj = MissionObjective.new()
+	newobj.objective_type=newobj.objective_types.ELIMINATE
+	newobj.objective_text="Eliminate Enemy Vessel Again"
+	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip2")
+	objectives.append(newobj)
+	
+	newobj = MissionObjective.new()
+	newobj.objective_type=newobj.objective_types.ELIMINATE
+	newobj.objective_text="More Vessel, More Elimination."
+	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip3")
+	objectives.append(newobj)
+	
+	newobj = MissionObjective.new()
+	newobj.objective_type=newobj.objective_types.ELIMINATE
+	newobj.objective_text="Spare This Vessel. KIDDING! ELIMINATE!"
+	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip4")
+	objectives.append(newobj)
+	
+	#PHASE TWO OF MISSION: 3 Areas Entered
+	finalizePhase()
+#	objectives.append(createAreaObjective(Vector2(1000,0),"Rally at Bravo"))
+	objectives.append(createAreaObjective(Vector2(1000,500),"Rally at Delta"))
+#	objectives.append(createAreaObjective(Vector2(1000,-500),"Rally at Charlie"))
+	finalizePhase()
+
 func getMissionName():
 	return mission_name
 func getPhaseName():
@@ -66,12 +106,13 @@ func getObjectives():
 		return []
 
 func onObjectiveComplete(obj):
+	objectives.erase(obj)
 	if obj in required_objectives:
 		required_objectives.erase(obj)
 	else:
 		optional_objectives.erase(obj)
 	if required_objectives.size()==0:
-		activateNextPhase()
+		emit_signal("phase_complete")
 
 func createAreaObjective(where,desc=null): #Quick hacky utility for making player-usable oneshot areas.
 	var newobj=MissionObjective.new(desc)
@@ -83,46 +124,30 @@ func createAreaObjective(where,desc=null): #Quick hacky utility for making playe
 	newarea.addValidGroup("player")
 	return newobj
 
-func setupMission(mng):
-	missionmanager=mng
-#	objectives.append(createAreaObjective(Vector2(700,0)))
-	
-	var newobj = MissionObjective.new()
-	newobj.objective_type=newobj.objective_types.ELIMINATE
-	newobj.objective_text="Eliminate Enemy Vessel"
-	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip")
-	objectives.append(newobj)
-	
-	finalizePhase()
-	objectives.append(createAreaObjective(Vector2(1000,0),"Rally at Bravo"))
-	objectives.append(createAreaObjective(Vector2(1000,500),"Rally at Delta"))
-	objectives.append(createAreaObjective(Vector2(1000,-500),"Rally at Charlie"))
-	finalizePhase()
-
 func finalizePhase():
 	missionphases.append(objectives)
 	objectives=[]
 
 func activateNextPhase():
-	if required_objectives.size():
+	if required_objectives.size(): #This should never happen unless the mission has a fail phase!
 		print("MOVING TO NEXT PHASE WITHOUT COMPLETION OF ALL OBJECTIVES")
-	for x in optional_objectives:
-		if x.isClearedAtPhaseEnd:
+	for x in optional_objectives: #Erase the non-persistent optional objectives
+		if x.isClearedAtPhaseEnd: #TODO: stuff here to disconnect signals cleanly, some kind of removeObjective call to the MissionInfo
 			optional_objectives.erase(x)
-	currentphase+=1
-	if currentphase == missionphases.size():
+	currentphase+=1 #Increment phase
+	if currentphase == missionphases.size(): #If no more phases, mission ends! Should maybe have a 'conclusion phase' that includes retreat, etc.
 		print("Mission Phases Resolved: Mission Complete! TODO")
 		#emit mission completed signal?
-		emit_signal("mission_complete",self)
-	else:
-		objectives=missionphases[currentphase]
+		emit_signal("mission_complete",self) #For now, causes fadeout. TODO: postgame menu?
+	else: #Load next phase of objectives, pass to MissionInfo, etc.
+		objectives=objectives + missionphases[currentphase] #TODO make this a standard 'loadMissionPhase' call
 		for obj in objectives:
-			connectObjectiveSignals(obj)
+			connectObjectiveSignals(obj)#Connect each object
 			if obj.isOptional == false:
 				required_objectives.append(obj)
 			else:
 				optional_objectives.append(obj)
-	emit_signal("update_mission_objectives")
+		emit_signal("update_mission_objectives")
 
 func connectObjectiveSignals(obj):
 	pass

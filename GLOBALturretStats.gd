@@ -43,7 +43,7 @@ var turretdict = {}
 
 func _ready():
 	addTurret("basic","Basic Cannon","base_post","turret_1","bullet2",5,1,.4,2,10,.8,10,.1,5)
-	addTurret("ballista","Superheated Ballista","base_gear","turret_ballista","bolt",15,1,.4,4,1,1,20,.1,7)
+	addTurret("ballista","Superheated Ballista","base_gear","turret_ballista","bolt",30,1,.4,4,1,1,20,.1,7)
 	addTurret("scatter","Repeating Scattergun","base_post","turret_1","pit",1,8,.15,5,19,.6,8,.9,2)
 
 func addTurret(n,dis_n,base,turret,projectile,damage,clip,firingtime,reloadtime,spread,acc,sp,drag,lif):

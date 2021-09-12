@@ -10,12 +10,12 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "RichTextEffect",
-"class": "RichTextPulse",
+"class": "HideTextFX",
 "language": "GDScript",
 "path": "res://RichTextTest.gd"
 } ]
 _global_script_class_icons={
-"RichTextPulse": ""
+"HideTextFX": ""
 }
 
 [application]

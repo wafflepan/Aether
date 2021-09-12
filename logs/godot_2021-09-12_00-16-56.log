@@ -5,8 +5,8 @@ Objective Type: ELIMINATE
 Objective Type: ELIMINATE
 Objective Type: ELIMINATE
 Objective Type: ELIMINATE
-29
-143
+28
+154
 Throttle Values: [0, 13.333333, 26.666667, 40]
 Loaded a tallship with no ship controller
 Throttle Values: [0, 13.333333, 26.666667, 40]
@@ -22,6 +22,26 @@ Registered Ship: PatrolShip3
 Registered Ship: PatrolShip4
 Registered Ship: TallShip
 Finished Loading Ship
+Ship Clicked: PatrolShip
+Chose Target
+Bullet hit PatrolShip
+Ship Clicked: PatrolShip4
+Chose Target
+Bullet hit PatrolShip4
+Ship Clicked: PatrolShip3
+Chose Target
+Changed Throttle Setting To 1  ,  0
+Bullet hit PatrolShip3
+Ship Clicked: PatrolShip2
+Chose Target
+Bullet hit PatrolShip2
+Objective Type: AREA
+Changed Throttle Setting To 2  ,  13.333333
+Changed Throttle Setting To 3  ,  26.666667
+Changed Throttle Setting To 3  ,  40
+Changed Throttle Setting To 3  ,  40
+TallShip
+Mission Phases Resolved: Mission Complete! TODO
 **ERROR**: Condition "_first != __null" is true.
    At: ./core/self_list.h:112:~List() - Condition "_first != __null" is true.
 **ERROR**: Condition "_first != __null" is true.
@@ -30,5 +50,3 @@ Finished Loading Ship
    At: core/object.cpp:2135:cleanup() - ObjectDB instances leaked at exit (run with --verbose for details).
 **ERROR**: Resources still in use at exit (run with --verbose for details).
    At: core/resource.cpp:477:clear() - Resources still in use at exit (run with --verbose for details).
-**ERROR**: There are still MemoryPool allocs in use at exit!
-   At: core/pool_vector.cpp:69:cleanup() - Condition "allocs_used > 0" is true.
