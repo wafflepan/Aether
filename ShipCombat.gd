@@ -9,6 +9,15 @@ onready var selector = $SelectionIndicator
 func _ready():
 	registerShips()
 	playercontroller.gameworld.assignPlayerShip(playercontroller.ship)
+	$ScreenTransition.fadeIn()
+	$MissionStatsRecorder.startMissionRecording()
+
+func switchToPostCombatScreen(mis):
+	$MissionStatsRecorder.finishMissionRecording()
+	$ScreenTransition.fadeOut()
+	yield($ScreenTransition,"finished")
+	SceneSwitcher.giveStack({"mission_stats":$MissionStatsRecorder.getMissionDict()})
+	SceneSwitcher.switchScenes("res://PostMissionScreen.tscn")
 
 func registerShips():
 	for child in $Entities.get_children():

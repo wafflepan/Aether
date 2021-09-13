@@ -15,6 +15,8 @@
 [ext_resource path="res://new_richtexteffect.tres" type="RichTextEffect" id=13]
 [ext_resource path="res://new_dynamicfont.tres" type="DynamicFont" id=14]
 [ext_resource path="res://enemypip_wip.png" type="Texture" id=15]
+[ext_resource path="res://ScreenTransition.tscn" type="PackedScene" id=16]
+[ext_resource path="res://MissionStatsRecorder.gd" type="Script" id=17]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -52,38 +54,6 @@ _data = {
 }
 
 [sub_resource type="RichTextEffect" id=7]
-
-[sub_resource type="Animation" id=8]
-resource_name = "fade_black"
-length = 2.0
-tracks/0/type = "value"
-tracks/0/path = NodePath("ColorRect:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 2 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 0, 0, 0, 0 ), Color( 0, 0, 0, 1 ) ]
-}
-
-[sub_resource type="Animation" id=9]
-resource_name = "unfade_black"
-length = 2.0
-tracks/0/type = "value"
-tracks/0/path = NodePath("ColorRect:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 2 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
-}
 
 [node name="ShipCombat" type="Node2D"]
 script = ExtResource( 4 )
@@ -256,23 +226,13 @@ position = Vector2( 116.228, -57.6414 )
 isPlayer = true
 SHIP_CONTROLLER = ExtResource( 5 )
 
-[node name="ScreenTransition" type="CanvasLayer" parent="."]
-
-[node name="ColorRect" type="ColorRect" parent="ScreenTransition"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-color = Color( 0, 0, 0, 0 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ScreenTransition"]
-anims/fade_black = SubResource( 8 )
-anims/unfade_black = SubResource( 9 )
+[node name="ScreenTransition" parent="." instance=ExtResource( 16 )]
 
 [node name="Camera" type="Camera2D" parent="."]
 current = true
 smoothing_enabled = true
 smoothing_speed = 8.0
 script = ExtResource( 2 )
+
+[node name="MissionStatsRecorder" type="Node" parent="."]
+script = ExtResource( 17 )

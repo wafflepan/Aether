@@ -84,6 +84,7 @@ func loadMission(): #Connect all mission signals
 	mission.connect("update_mission_objectives",self,"loadMissionObjectives")
 	mission.connect("phase_complete",self,"nextMissionPhase")
 	mission.connect("mission_complete",self,"onMissionComplete")
+	get_parent().get_parent().get_node("MissionStatsRecorder").setMissionInfo(mission)
 #	self.add_child(mission)
 #	updateMissionPhase()
 
@@ -112,7 +113,7 @@ func onObjectiveComplete(obj):
 #		active_objectives.erase(obj)
 
 func onMissionComplete(mis):
-	get_parent().get_parent().get_node("ScreenTransition/AnimationPlayer").play("fade_black") #TODO Transition to post-mission screen
+	get_parent().get_parent().switchToPostCombatScreen(mission)
 
 func onObjectiveFailed():
 	pass

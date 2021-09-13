@@ -68,30 +68,30 @@ func setupMission(mng): #Placeholder function to create mission parameters (this
 	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip")
 	objectives.append(newobj)
 	
-	newobj = MissionObjective.new()
-	newobj.objective_type=newobj.objective_types.ELIMINATE
-	newobj.objective_text="Eliminate Enemy Vessel Again"
-	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip2")
-	objectives.append(newobj)
-	
-	newobj = MissionObjective.new()
-	newobj.objective_type=newobj.objective_types.ELIMINATE
-	newobj.objective_text="More Vessel, More Elimination."
-	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip3")
-	objectives.append(newobj)
-	
-	newobj = MissionObjective.new()
-	newobj.objective_type=newobj.objective_types.ELIMINATE
-	newobj.objective_text="Spare This Vessel. KIDDING! ELIMINATE!"
-	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip4")
-	objectives.append(newobj)
+#	newobj = MissionObjective.new()
+#	newobj.objective_type=newobj.objective_types.ELIMINATE
+#	newobj.objective_text="Eliminate Enemy Vessel Again"
+#	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip2")
+#	objectives.append(newobj)
+#
+#	newobj = MissionObjective.new()
+#	newobj.objective_type=newobj.objective_types.ELIMINATE
+#	newobj.objective_text="More Vessel, More Elimination."
+#	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip3")
+#	objectives.append(newobj)
+#
+#	newobj = MissionObjective.new()
+#	newobj.objective_type=newobj.objective_types.ELIMINATE
+#	newobj.objective_text="Spare This Vessel. KIDDING! ELIMINATE!"
+#	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip4")
+#	objectives.append(newobj)
 	
 	#PHASE TWO OF MISSION: 3 Areas Entered
 	finalizePhase()
 #	objectives.append(createAreaObjective(Vector2(1000,0),"Rally at Bravo"))
-	objectives.append(createAreaObjective(Vector2(1000,500),"Rally at Delta"))
+#	objectives.append(createAreaObjective(Vector2(1000,500),"Rally at Delta"))
 #	objectives.append(createAreaObjective(Vector2(1000,-500),"Rally at Charlie"))
-	finalizePhase()
+#	finalizePhase()
 
 func getMissionName():
 	return mission_name
@@ -125,6 +125,9 @@ func createAreaObjective(where,desc=null): #Quick hacky utility for making playe
 	return newobj
 
 func finalizePhase():
+	if !objectives.size():
+		print("ERROR: Mission tried to finalize a phase with no objectives")
+		return -1
 	missionphases.append(objectives)
 	objectives=[]
 
