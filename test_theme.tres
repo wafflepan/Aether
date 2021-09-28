@@ -1,10 +1,22 @@
-[gd_resource type="Theme" load_steps=6 format=2]
+[gd_resource type="Theme" load_steps=7 format=2]
 
 [ext_resource path="res://Lobster-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://enemypip_wip.png" type="Texture" id=2]
 [ext_resource path="res://WeaponResources/Projectile/bullet1.png" type="Texture" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.403922, 0.403922, 0.403922, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id=2]
 border_color = Color( 1, 0.0392157, 0.0392157, 1 )
 border_blend = true
 corner_radius_top_left = 109
@@ -12,12 +24,13 @@ shadow_color = Color( 1, 1, 1, 0.6 )
 shadow_size = 15
 shadow_offset = Vector2( -10, 0 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=3]
 outline_color = Color( 0.992157, 0.235294, 0.235294, 1 )
 font_data = ExtResource( 1 )
 
 [resource]
-default_font = SubResource( 2 )
+default_font = SubResource( 3 )
+Panel/styles/panel = SubResource( 1 )
 TabContainer/colors/font_color_bg = Color( 0.360784, 0.309804, 0.807843, 1 )
 TabContainer/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
 TabContainer/colors/font_color_fg = Color( 0.94, 0.94, 0.94, 1 )
@@ -33,7 +46,7 @@ TabContainer/icons/increment = null
 TabContainer/icons/increment_highlight = null
 TabContainer/icons/menu = ExtResource( 3 )
 TabContainer/icons/menu_highlight = null
-TabContainer/styles/panel = SubResource( 1 )
+TabContainer/styles/panel = SubResource( 2 )
 TabContainer/styles/tab_bg = null
 TabContainer/styles/tab_disabled = null
 TabContainer/styles/tab_fg = null

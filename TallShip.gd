@@ -2,18 +2,25 @@ extends KinematicBody2D
 
 
 class WeaponMount:
+	var id = 0 #Unique numeric ID for each mount on a ship.
 	var size = 1
 	var location = Vector2()
 	var angle = 0
 	var weapon = null
+	var weapontype = GlobaLturretStats.type.TURRET
+	
+	var isDisabled = false #Damaged or disarmed
+	var isDestroyed = false
+	
 	func _init(sz,loc,ang):
 		size=sz
 		location=loc
 		angle=ang
 	func assignWeapon(wp):
-		weapon=wp
-		weapon.position=location
-		weapon.rotation_degrees=angle
+		if wp:
+			weapon=wp
+			weapon.position=location
+			weapon.rotation_degrees=angle
 
 class WeaponBattery: #Contains multiple turrets slaved to the same targeting/firing/cycling orders. Must be same weapon type?
 	var total_arc
@@ -39,17 +46,26 @@ var desired_targets = []
 
 var current_velocity = Vector2()
 var current_spin = 0.0
-
 var waypoint = Vector2() #Waypoint to aim ship towards
 
-var dragcoefficient = 0.1
-var rudderforce=100 #Baseline rudder force of 100 should turn the ship reasonably fast while at average speed, benchmark for 10 degrees per second
+#var dragcoefficient = 0.1
+#var rudderforce=100 #Baseline rudder force of 100 should turn the ship reasonably fast while at average speed, benchmark for 10 degrees per second
 
-var enginethrust
+#var enginethrust
 var maxspeed  = 40 #TODO make this a function of hull drag and engine thrust? Ships might have a 'design speed' and suffer penalties above it from turbulence, vortexes, etc.
 
 var throttleslots = []
 var currentthrottle = 0
+
+var rotation_rate = 0.0
+
+####
+var rotation_rate_max = deg2rad(12.0) #Degrees per second
+var rotation_rate_change_max = deg2rad(8.0) #Degrees per second
+####
+
+var pid_p = 1
+var pid_d = 2
 
 export var isPlayer = false #Sloppy TODO for an entity-component input system for now
 export var aiType = 0
@@ -76,7 +92,15 @@ var navindex = 0
 
 var turn_rate = deg2rad(10)
 
+var shipstats=null #Imported dictionary that tells a ship what it is
+
 func _ready():
+	if shipstats:
+		loadShipStats()
+	else:
+		loadWeaponMounts() #Hardcoded mount-loading
+	$HealthBar.max_value=hullpointsmax
+	$HealthBar.value=hullpoints
 	assignThrottleValues()
 	current_velocity = 0
 	if SHIP_CONTROLLER:
@@ -88,15 +112,46 @@ func _ready():
 #	var engineparticles = $Engines.get_child(0)
 	for child in $Engines.get_children():
 		child.process_material=child.process_material.duplicate() #Make engine particles unique
-	$HealthBar.max_value=hullpointsmax
-	$HealthBar.value=hullpoints
 	$Line2D.set_as_toplevel(true)
 	$WaypointSprite.set_as_toplevel(true)
 	$WaypointPath.set_as_toplevel(true)
 	$TargetingSprite.set_as_toplevel(true)
-	loadWeaponMounts()
 	updateEngineParticles()
 
+func setShipStats(st):
+	shipstats=st
+	loadShipStats()
+
+func clearTurrets():
+	pass
+	for mount in $Hardpoints.get_children():
+		mount.free()
+		mounts.clear()
+
+func loadShipStats():
+	clearTurrets()
+	#Assign various stat values from a dictionary
+	var mountsdata = shipstats["ship_mounts"]
+	for mount in mountsdata:
+		var test1 = mount
+		var newmount = addMount(mount["size"],mount["location"],mount["rotation"])
+		if mount.has("weapon") and mount["weapon"]!=null:
+			var newgun = load("res://ShipTurret.tscn").instance()
+			newgun.turret_type=mount["weapon"]
+			newmount.assignWeapon(newgun)
+			$Hardpoints.add_child(newgun)
+	diagrampoly = shipstats["display_polygon"]
+	maxspeed = shipstats["max_speed"]
+	throttleslots = shipstats["throttle_slots"]
+	hullpointsmax = shipstats["hullpoints_max"]
+	hullpoints = hullpointsmax
+	rotation_rate_max = shipstats["max_turn_rate"]
+	rotation_rate_change_max = shipstats["max_turn_rate_change"]
+	
+	if shipstats.has("pid_settings"):
+		pid_p = shipstats["pid_settings"][0]
+		pid_d = shipstats["pid_settings"][1]
+	
 
 func assignThrottleValues():
 	
@@ -124,18 +179,25 @@ func throttleDecrease():
 func getThrottleSpeed():
 	return throttleslots[currentthrottle]
 
+func addMount(size,loc,rot):
+	var newmount = WeaponMount.new(size,loc,rot)
+	newmount.id = mounts.size()
+	mounts.append(newmount)
+	return newmount
+
 func loadWeaponMounts():
-	pass #TODO load this from a file for each ship hull or something.
-	var bow_sweep = WeaponMount.new(1,Vector2(45,0),0)
-	var sidegun1 = WeaponMount.new(1,Vector2(25,-7),-80)
-	var sidegun2 = WeaponMount.new(1,Vector2(25,7),80)
-	mounts=[bow_sweep,sidegun1,sidegun2]
-	var turrets = ["basic","ballista","scatter"]
+	#TODO load this from a file for each ship hull or something.
+	assert(addMount(1,Vector2(45,0),0))
+	assert(addMount(1,Vector2(25,-7),-80))
+	assert(addMount(1,Vector2(25,7),80))
+	assert(addMount(1,Vector2(-40,0),180))
+	var turrets = ["basic","ballista","scatter",null]
 	for mount in mounts:
-		var newgun = load("res://ShipTurret.tscn").instance()
-		newgun.turret_type=turrets[mounts.find(mount)]
-		mount.assignWeapon(newgun)
-		$Hardpoints.add_child(newgun)
+		if turrets[mounts.find(mount)]:
+			var newgun = load("res://ShipTurret.tscn").instance()
+			newgun.turret_type=turrets[mounts.find(mount)]
+			mount.assignWeapon(newgun) #Can be assigned as null
+			$Hardpoints.add_child(newgun)
 
 func addTarget(tg):
 	desired_targets.append(tg)
@@ -196,13 +258,6 @@ func steeringPID(step,currentval,error,lasterror,steermax):
 		lasterror=error
 	var predict_pid = error*pid_p + pid_d*(error-lasterror)/step
 	return clamp(predict_pid,-rotation_rate_change_max,rotation_rate_change_max)
-
-var rotation_rate = 0.0
-var rotation_rate_max = deg2rad(12.0) #Degrees per second
-var rotation_rate_change_max = deg2rad(8.0) #Degrees per second
-
-var pid_p = 1
-var pid_d = 2
 
 var ship_previous_error
 

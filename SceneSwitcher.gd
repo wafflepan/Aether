@@ -22,6 +22,9 @@ func takeStack(): #Pop stack of inputs to clear for future scene switching use
 	clearData()
 	return results
 
+func readStack(): #Read without popping, used for scenes that return back to a 'hub' scene like dock menus.
+	return getData()
+
 func switchScenes(newscenepath):
-	print(get_tree())
-	get_tree().change_scene(newscenepath)
+#	print(get_tree())
+	assert(!get_tree().change_scene(newscenepath))

@@ -6,7 +6,10 @@ var playercontroller = null
 onready var camera = $Camera
 onready var selector = $SelectionIndicator
 
+var scene_data = null
+
 func _ready():
+	scene_data = SceneSwitcher.takeStack()
 	registerShips()
 	playercontroller.gameworld.assignPlayerShip(playercontroller.ship)
 	$ScreenTransition.fadeIn()
@@ -26,6 +29,8 @@ func registerShips():
 			child.registerSignals(self)
 
 func assignPlayerShip(sh):
+	if "ship" in scene_data:
+		sh.setShipStats(scene_data["ship"])
 	$UI/MissionInfo.camera=camera
 	$UI.setPlayerShip(sh)
 	remove_child(camera)

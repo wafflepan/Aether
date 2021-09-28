@@ -1,0 +1,181 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://WeaponLoadoutEditor.gd" type="Script" id=1]
+[ext_resource path="res://ShipDisplay.gd" type="Script" id=2]
+[ext_resource path="res://Selection.png" type="Texture" id=3]
+[ext_resource path="res://icon.png" type="Texture" id=4]
+
+[node name="WeaponLoadoutEditor" type="Node"]
+script = ExtResource( 1 )
+
+[node name="ShipHardpointDisplay" type="CanvasLayer" parent="."]
+
+[node name="HeldItem" type="TextureRect" parent="ShipHardpointDisplay"]
+visible = false
+margin_right = 64.0
+margin_bottom = 64.0
+mouse_filter = 2
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipWeaponLoadout" type="Control" parent="ShipHardpointDisplay"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponList" type="Control" parent="ShipHardpointDisplay/ShipWeaponLoadout"]
+anchor_right = 0.3
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponList"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MarginContainer" type="MarginContainer" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponList"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponList/MarginContainer"]
+margin_right = 384.0
+margin_bottom = 800.0
+
+[node name="WeaponListContainer" type="VBoxContainer" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponList/MarginContainer/ScrollContainer"]
+margin_right = 384.0
+margin_bottom = 800.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ButtonTemplate" type="Button" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponList/MarginContainer"]
+visible = false
+margin_right = 384.0
+margin_bottom = 800.0
+size_flags_horizontal = 3
+text = "WEAPON TEST 1"
+icon = ExtResource( 3 )
+
+[node name="ShipDisplayBounds" type="Control" parent="ShipHardpointDisplay/ShipWeaponLoadout"]
+anchor_left = 0.3
+anchor_right = 0.7
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ShipHardpointDisplay/ShipWeaponLoadout/ShipDisplayBounds"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="ShipHardpointDisplay/ShipWeaponLoadout/ShipDisplayBounds"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipDisplayArea" type="ViewportContainer" parent="ShipHardpointDisplay/ShipWeaponLoadout/ShipDisplayBounds/MarginContainer"]
+margin_right = 492.0
+margin_bottom = 780.0
+stretch = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipDisplay" type="Panel" parent="ShipHardpointDisplay/ShipWeaponLoadout/ShipDisplayBounds/MarginContainer"]
+margin_right = 492.0
+margin_bottom = 780.0
+script = ExtResource( 2 )
+
+[node name="Panel" type="Panel" parent="ShipHardpointDisplay/ShipWeaponLoadout/ShipDisplayBounds/MarginContainer/ShipDisplay"]
+modulate = Color( 0.454902, 0.454902, 0.454902, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShipOutline" type="Polygon2D" parent="ShipHardpointDisplay/ShipWeaponLoadout/ShipDisplayBounds/MarginContainer/ShipDisplay"]
+rotation = -1.5708
+antialiased = true
+polygon = PoolVector2Array( -100, 15, 100, 15, 100, -15, -100, -15 )
+
+[node name="Camera2D" type="Camera2D" parent="ShipHardpointDisplay/ShipWeaponLoadout/ShipDisplayBounds/MarginContainer/ShipDisplay"]
+current = true
+
+[node name="WeaponInfo" type="Control" parent="ShipHardpointDisplay/ShipWeaponLoadout"]
+anchor_left = 0.7
+anchor_right = 1.0
+anchor_bottom = 0.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponInfo"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponInfo"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponName" type="RichTextLabel" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponInfo/MarginContainer"]
+margin_right = 364.0
+margin_bottom = 380.0
+size_flags_horizontal = 3
+bbcode_enabled = true
+bbcode_text = "TEST TEST"
+text = "TEST TEST"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WeaponDemo" type="Control" parent="ShipHardpointDisplay/ShipWeaponLoadout"]
+anchor_left = 0.7
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.9
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ShipHardpointDisplay/ShipWeaponLoadout/WeaponDemo"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ConfirmButton" type="Button" parent="ShipHardpointDisplay"]
+anchor_left = 0.7
+anchor_top = 0.9
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "CONFIRM"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="ShipHardpointDisplay/ConfirmButton" to="." method="_on_ConfirmButton_pressed"]

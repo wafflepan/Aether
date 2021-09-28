@@ -5,8 +5,8 @@ export var start_angle = deg2rad(0.0)
 export var start_accel = 0.0
 export var start_position = Vector2()
 export var start_spin = deg2rad(0.0)
-export var spin_change = deg2rad(8.0) #How fast spin can increase/decrease
-export var spin_max = deg2rad(12.0)
+export var spin_change = deg2rad(28.0) #How fast spin can increase/decrease
+export var spin_max = deg2rad(28.0)
 
 #var pid_d = 1.5/(spin_change/spin_max)
 var pid_d = 2
@@ -19,7 +19,7 @@ var spin = 0
 
 #var target = [Vector2(150,0),Vector2(200,-5),Vector2(200,50)]
 #var target = [Vector2(50,0),Vector2(112,33)]
-var target = [Vector2(50,-200)]
+var target = [Vector2(50,200)]
 
 var setPath = false
 
@@ -84,6 +84,26 @@ func predictMaxTurnRatePoint():
 #		else:
 #			print("\t",abs(rdot-spin_max))
 	return [p,r]
+
+func steerAI():
+	var seeksteer = seekAI()
+	
+	
+
+var steeringmax = 20 #Degrees per second
+var speed = 20
+#var velocity = Vector2()
+var steering = 0
+
+var debugseekstrengths = []
+var debugfleestrengths = []
+
+var debugdesiredpoint = []
+
+func seekAI():
+	pass
+	var seekpoint = $Seek
+	
 
 func checkTargetTurnRadius():
 	circlealert=false

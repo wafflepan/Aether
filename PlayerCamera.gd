@@ -10,13 +10,14 @@ func _process(delta):
 
 var zoomspeed = .1
 var desiredzoom=self.zoom
+export var zoomlimit_out = 10
 
 func _input(event):
 	if Input.is_action_just_pressed("camera_zoom_in"):
 		desiredzoom -= Vector2(0.1,0.1)
-		desiredzoom.x = clamp(desiredzoom.x,0.5,3)
-		desiredzoom.y = clamp(desiredzoom.y,0.5,3)
+		desiredzoom.x = clamp(desiredzoom.x,0.5,zoomlimit_out)
+		desiredzoom.y = clamp(desiredzoom.y,0.5,zoomlimit_out)
 	elif Input.is_action_just_pressed("camera_zoom_out"):
 		desiredzoom += Vector2(0.1,0.1)
-		desiredzoom.x = clamp(desiredzoom.x,0.5,3)
-		desiredzoom.y = clamp(desiredzoom.y,0.5,3)
+		desiredzoom.x = clamp(desiredzoom.x,0.5,zoomlimit_out)
+		desiredzoom.y = clamp(desiredzoom.y,0.5,zoomlimit_out)

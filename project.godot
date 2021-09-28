@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-run/main_scene="res://ShipCombat.tscn"
+run/main_scene="res://WeaponLoadoutEditor.tscn"
 boot_splash/use_filter=false
 
 [autoload]

@@ -10,7 +10,7 @@
 [ext_resource path="res://DialogReadout.tscn" type="PackedScene" id=8]
 [ext_resource path="res://TargetDisplay.tscn" type="PackedScene" id=9]
 [ext_resource path="res://test_theme.tres" type="Theme" id=10]
-[ext_resource path="res://ProceduralIsland.tscn" type="PackedScene" id=11]
+[ext_resource path="res://MapGenerator.tscn" type="PackedScene" id=11]
 [ext_resource path="res://MissionInfo.gd" type="Script" id=12]
 [ext_resource path="res://new_richtexteffect.tres" type="RichTextEffect" id=13]
 [ext_resource path="res://new_dynamicfont.tres" type="DynamicFont" id=14]
@@ -196,14 +196,10 @@ text = "BLAH BLAH"
 theme = ExtResource( 10 )
 
 [node name="DialogReadout" parent="UI" instance=ExtResource( 8 )]
-visible = false
 
 [node name="TargetDisplay" parent="UI" instance=ExtResource( 9 )]
 
 [node name="MissionData" type="Node2D" parent="."]
-
-[node name="ProceduralIsland" parent="." instance=ExtResource( 11 )]
-position = Vector2( 235.969, -220.867 )
 
 [node name="Entities" type="Node2D" parent="."]
 
@@ -236,3 +232,5 @@ script = ExtResource( 2 )
 
 [node name="MissionStatsRecorder" type="Node" parent="."]
 script = ExtResource( 17 )
+
+[node name="MapGenerator" parent="." instance=ExtResource( 11 )]
