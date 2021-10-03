@@ -6,7 +6,7 @@ var islands = {}
 
 export var size = Vector2(5800,5000)
 
-export var island_density = 0.001 #Number of islands per 50000 units
+export var island_density = 0.05 #Number of islands per 50000 units
 
 var bounds = Rect2(Vector2(-size.x/2,-size.y/2),size)
 #T0 Implementation:
@@ -35,9 +35,28 @@ func _ready():
 	call_deferred("populateQuadrants")
 	update()
 
+
+var ex = []
+var allresults = []
 #func _process(delta):
-#	for item in testquadrant.get_overlapping_bodies():
-#		item.modulate = Color(1,0,0)
+#	var query = Physics2DShapeQueryParameters.new()
+#	query.set_transform(Transform2D(0,quadrants.keys()[0].position/2))
+#	var queryshape=RectangleShape2D.new()
+#	queryshape.extents = quadrants.keys()[0].size/2
+#	query.set_exclude(ex)
+#	query.set_shape(queryshape)
+#	var results =get_world_2d().get_direct_space_state().get_rest_info(query)
+#	if results:
+#		print(results["collider_id"],"  ",results["rid"].get_id())
+#		allresults.append((results["collider_id"]))
+#		if !results["rid"] in ex:
+#			pass
+#			ex.append(results["rid"])
+#		else:
+#			print("dupe")
+#	print(allresults)
+#	populateQuadrants()
+#	set_process(false)
 
 var debug_center
 
@@ -50,16 +69,30 @@ func calculateQuadrants():
 onready var testquadrant=$QuadrantTester
 onready var testquadrantshape = $QuadrantTester/CollisionShape2D
 func populateQuadrants():
-	var query = Physics2DShapeQueryParameters.new()
-	var q = quadrants.keys()[0]
-	query.set_transform(Transform2D(0,q.position/2))
-	var queryshape=RectangleShape2D.new()
-	queryshape.extents = q.size/2
-	query.set_shape(queryshape)
-	testquadrant.position = q.position/2
-	testquadrantshape.shape = queryshape
-	var results =get_world_2d().get_direct_space_state().collide_shape(query,528)
-	print(results)
+	for q in quadrants:
+		var query = Physics2DShapeQueryParameters.new()
+#		var q = quadrants.keys()[0]
+		query.set_transform(Transform2D(0,q.position/2))
+		var queryshape=RectangleShape2D.new()
+		queryshape.extents = q.size/2
+		query.set_shape(queryshape)
+		testquadrant.position = q.position/2
+		testquadrantshape.shape = queryshape
+		var results =get_world_2d().get_direct_space_state().get_rest_info(query)
+		var islandlist = []
+		while results:
+			islandlist.append(instance_from_id(results["collider_id"]))
+	#		print(query.exclude, results["collider_id"])
+	#		var exclusion = query.get_exclude()
+	#		exclusion.append(results["collider_id"])
+			query.set_exclude(islandlist)
+#			print(query.exclude)
+			results = get_world_2d().get_direct_space_state().get_rest_info(query)
+	#	print(results)
+		print(islandlist.size()," Islands in Q",quadrants.keys().find(q)+1,":")
+		for x in islandlist:
+			pass
+			print("\t",(x).name)
 #	for entry in results:
 #		entry["collider"].modulate=Color(1,1,0)
 #		print(entry["collider"].name)

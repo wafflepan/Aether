@@ -257,12 +257,12 @@ func drawElevationGrid():
 
 
 func _on_ProceduralIsland_input_event(viewport, event, shape_idx):
-	print("test")
+#	print("test")
 	if event is InputEventMouseButton and event.is_pressed():
 		if event.button_index == BUTTON_LEFT:
 			print("ISLAND STATS: ",max_radius,"  ",avg_radius)
 
 
 func _on_ProceduralIsland_mouse_entered():
-	print("test")
+#	print("test")
 	pass # Replace with function body.
