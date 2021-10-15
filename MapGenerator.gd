@@ -68,6 +68,7 @@ func calculateQuadrants():
 		quadrants[Rect2(corner,centerpoint-corner)]=[]
 onready var testquadrant=$QuadrantTester
 onready var testquadrantshape = $QuadrantTester/CollisionShape2D
+
 func populateQuadrants():
 	for q in quadrants:
 		var query = Physics2DShapeQueryParameters.new()
@@ -93,12 +94,19 @@ func populateQuadrants():
 		for x in islandlist:
 			pass
 			print("\t",(x).name)
+		quadrants[q] = islandlist
+	for q in quadrants:
+		var islands = quadrants[q]
+		highlightCenterIsland(getQuadrantCenter(q),islands)
 #	for entry in results:
 #		entry["collider"].modulate=Color(1,1,0)
 #		print(entry["collider"].name)
 #			island.modulate=Color(0,0,0)
 			
 		#First get list of islands that are centered in that quadrant 
+
+func getQuadrantCenter(q):
+	return q.position/2
 
 func makeIsland(_sz):
 	var island = load("res://ProceduralIsland.tscn").instance()
@@ -129,6 +137,19 @@ func _draw():
 #		print(q)
 		draw_rect(q,Color(1,0,0,0.5),false,8)
 
+var sort_distance_point = Vector2()
+func sortIslandDistance(center,islands):
+	var ary = islands.duplicate()
+	sort_distance_point=center
+	ary.sort_custom(self,"distanceSort")
+	return ary
+
+func highlightCenterIsland(center,islands):
+	var island = sortIslandDistance(center,islands)[0]
+	island.modulate=Color(1,1,0)
+
+func distanceSort(a,b):
+	return a.position.distance_squared_to(sort_distance_point) < b.position.distance_squared_to(sort_distance_point)
 
 func getCenterIsland():
 	var mapcenter = Vector2()
