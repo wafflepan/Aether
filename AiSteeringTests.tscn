@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://AiSteeringTests.gd" type="Script" id=1]
-[ext_resource path="res://ship1.png" type="Texture" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
+[ext_resource path="res://AIShipController.gd" type="Script" id=2]
+[ext_resource path="res://targetbeacon.tscn" type="PackedScene" id=3]
 [ext_resource path="res://enemypip_wip.png" type="Texture" id=4]
+[ext_resource path="res://TallShip.tscn" type="PackedScene" id=5]
+[ext_resource path="res://icon.png" type="Texture" id=7]
 
 [node name="AiSteeringTests" type="Node2D"]
 script = ExtResource( 1 )
@@ -14,29 +16,41 @@ __meta__ = {
 [node name="Flee" type="Sprite" parent="." groups=[
 "flee",
 ]]
+visible = false
 position = Vector2( 399, 253 )
 texture = ExtResource( 4 )
 
-[node name="Seek" type="Sprite" parent="." groups=[
-"seek",
-]]
-position = Vector2( 472, 254 )
-texture = ExtResource( 3 )
+[node name="Tween" type="Tween" parent="."]
 
-[node name="Seek2" type="Sprite" parent="." groups=[
-"seek",
-]]
-position = Vector2( 729, 120 )
-texture = ExtResource( 3 )
+[node name="TallShip2" parent="." instance=ExtResource( 5 )]
+position = Vector2( -34.9955, 209.355 )
+rotation = 3.03257
+SHIP_CONTROLLER = ExtResource( 2 )
 
-[node name="Ship" type="Node2D" parent="."]
-position = Vector2( 149, 635 )
-rotation = -2.01622
-z_index = -1
+[node name="TerrainTest" type="StaticBody2D" parent="."]
 
-[node name="Ship" type="Sprite" parent="Ship"]
-rotation = 1.5708
-texture = ExtResource( 2 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="TerrainTest"]
+polygon = PoolVector2Array( -233.962, 20.8898, 144.205, 23.2683, 145.395, -178.897, -244.665, -184.843 )
 
-[node name="Camera2D" type="Camera2D" parent="Ship/Ship"]
+[node name="CollisionPolygon2D2" type="Polygon2D" parent="TerrainTest"]
+polygon = PoolVector2Array( -233.962, 20.8898, 144.205, 23.2683, 145.395, -178.897, -244.665, -184.843 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( -29.1181, 208.59 )
 current = true
+zoom = Vector2( 0.8, 0.8 )
+
+[node name="Centerpoint" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="Centerpoint"]
+modulate = Color( 1, 1, 1, 0.4 )
+texture = ExtResource( 7 )
+
+[node name="Seek2" parent="." instance=ExtResource( 3 )]
+position = Vector2( -262.125, 373.263 )
+
+[node name="Seek3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 289.341, 535.407 )
+
+[node name="Seek4" parent="." instance=ExtResource( 3 )]
+position = Vector2( 138.779, 227.156 )

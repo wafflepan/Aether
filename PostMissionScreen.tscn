@@ -37,7 +37,7 @@ margin_top = 20.0
 margin_bottom = 4.0
 bbcode_enabled = true
 bbcode_text = "TESTING TEXT"
-text = "ELAPSED TIME"
+text = "TESTING TEXT"
 __meta__ = {
 "_edit_use_anchors_": false
 }

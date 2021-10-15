@@ -37,3 +37,6 @@ func shipIncreaseSpeed(amt):
 
 func shipDecreaseSpeed(amt):
 	ship.throttleDecrease()
+
+func getSteeringAdjust():
+	return [Vector2(),0]

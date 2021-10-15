@@ -78,6 +78,7 @@ func _ready():
 		pol=circlepoints
 	generatePoints()
 	generateIslandPolygonFirstPass(pol)
+#	yield(get_tree().create_timer(2),"timeout")
 	var results = smoothPolygon($Polygon2D.polygon)
 	$Polygon2D.polygon=results
 	results = roughenPolygon($Polygon2D.polygon)
@@ -157,6 +158,7 @@ func generatePoints():
 		if rounded in elevations:
 			elevations[rounded]+=1
 	pol = polygon
+	debugpoints=pol
 #	dt = Geometry.triangulate_delaunay_2d(pol)
 #	print(Geometry.triangulate_delaunay_2d(PoolVector2Array(polygon)))
 #	pol = resolvePolygon(polygon)
@@ -177,7 +179,7 @@ Vector2(1,0)*checkrad+point,Vector2(0,-1)*checkrad+point,Vector2(-1,0)*checkrad+
 		totalpoly = poly
 #		print(point)
 #		update()
-#		yield(get_tree().create_timer(.1),"timeout")
+#		yield(get_tree().create_timer(.01),"timeout")
 	debug_currentshape=null
 	debug_previous=null
 	update()
@@ -188,21 +190,21 @@ func closestElevation(point):
 	return Vector2(stepify(point.x,spacing),stepify(point.y,spacing))
 
 #func _draw():
-#	draw_circle(Vector2(),max_radius,Color(1,0,0,0.4))
-#	draw_circle(Vector2(),avg_radius,Color(0,1,0,0.2))
+##	draw_circle(Vector2(),max_radius,Color(1,0,0,0.4))
+##	draw_circle(Vector2(),avg_radius,Color(0,1,0,0.2))
+##	for point in pol:
+##		draw_circle(point,checkrad,Color(0,0,1))
 #	for point in $Polygon2D.polygon:
 #		draw_circle(point,5,Color(1,1,1,lerp(1,0.01,float(Array($Polygon2D.polygon).find(point))/$Polygon2D.polygon.size())))
 #	for point in debugpoints:
 #		draw_circle(point,3,Color(1,0,0))
-#	draw_circle(Vector2(),8,Color(0,0,1))
-#	draw_circle(centroid($Polygon2D.polygon),8,Color(0,1,0))
+##	draw_circle(Vector2(),8,Color(0,0,1))
+##	draw_circle(centroid($Polygon2D.polygon),8,Color(0,1,0))
 #	if debug_currentshape:
 ##		draw_polygon(totalpoly,PoolColorArray([Color(.2,.2,.2,.5)]))
 #		draw_polygon(debug_currentshape,PoolColorArray([Color(1,0,1)]))
 #		if debug_previous:
 #			draw_polygon(debug_previous,PoolColorArray([Color(.8,0,.8,0.5)]))
-##	for point in pol:
-##		draw_circle(point,checkrad,Color(0,0,1))
 ##	draw_polygon(pol,PoolColorArray([Color(1,0,0)]))
 #	for point in pol:
 #		var new = []

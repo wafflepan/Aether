@@ -1,10 +1,9 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://TallShip.tscn" type="PackedScene" id=1]
 [ext_resource path="res://PlayerCamera.gd" type="Script" id=2]
 [ext_resource path="res://SelectionIndicator.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ShipCombat.gd" type="Script" id=4]
-[ext_resource path="res://PlayerShipController.gd" type="Script" id=5]
 [ext_resource path="res://ShipPanel.tscn" type="PackedScene" id=6]
 [ext_resource path="res://UI.gd" type="Script" id=7]
 [ext_resource path="res://DialogReadout.tscn" type="PackedScene" id=8]
@@ -17,6 +16,8 @@
 [ext_resource path="res://enemypip_wip.png" type="Texture" id=15]
 [ext_resource path="res://ScreenTransition.tscn" type="PackedScene" id=16]
 [ext_resource path="res://MissionStatsRecorder.gd" type="Script" id=17]
+[ext_resource path="res://MissionEndTitle.tscn" type="PackedScene" id=18]
+[ext_resource path="res://AIShipController.gd" type="Script" id=19]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -98,6 +99,17 @@ script = ExtResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MissionEndTitle" parent="UI/MissionInfo" instance=ExtResource( 18 )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -640.0
+margin_top = -400.0
+margin_right = 640.0
+margin_bottom = 400.0
+mouse_filter = 2
 
 [node name="MissionObjectives" type="Panel" parent="UI/MissionInfo"]
 anchor_left = 0.5
@@ -204,23 +216,33 @@ theme = ExtResource( 10 )
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="PatrolShip" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 107.039, -186.01 )
+position = Vector2( 423.354, -287.831 )
+faction_id = 1
+SHIP_CONTROLLER = ExtResource( 19 )
 
 [node name="PatrolShip2" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 400.584, -239.811 )
+position = Vector2( 441.129, -161.807 )
+faction_id = 1
+SHIP_CONTROLLER = ExtResource( 19 )
 
 [node name="PatrolShip3" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( -141.2, -284.173 )
+position = Vector2( 737.966, -340.918 )
+faction_id = 1
+SHIP_CONTROLLER = ExtResource( 19 )
 
 [node name="PatrolShip4" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 120.253, -371.953 )
+position = Vector2( 472.242, -464.53 )
+faction_id = 1
+SHIP_CONTROLLER = ExtResource( 19 )
 
 [node name="TallShip" parent="Entities" groups=[
-"player",
+"seek",
 ] instance=ExtResource( 1 )]
-position = Vector2( 116.228, -57.6414 )
-isPlayer = true
-SHIP_CONTROLLER = ExtResource( 5 )
+position = Vector2( 561.679, 424.643 )
+rotation = -0.998477
+faction_id = 2
+hullpointsmax = 150
+SHIP_CONTROLLER = ExtResource( 19 )
 
 [node name="ScreenTransition" parent="." instance=ExtResource( 16 )]
 

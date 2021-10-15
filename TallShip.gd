@@ -46,7 +46,7 @@ var desired_targets = []
 
 var current_velocity = Vector2()
 var current_spin = 0.0
-var waypoint = Vector2() #Waypoint to aim ship towards
+var waypoint = null #Waypoint to aim ship towards
 
 #var dragcoefficient = 0.1
 #var rudderforce=100 #Baseline rudder force of 100 should turn the ship reasonably fast while at average speed, benchmark for 10 degrees per second
@@ -56,12 +56,16 @@ var maxspeed  = 40 #TODO make this a function of hull drag and engine thrust? Sh
 
 var throttleslots = []
 var currentthrottle = 0
+var target_velocity = 0
+
+var accel = 25
+var deccel = 15
 
 var rotation_rate = 0.0
 
 ####
 var rotation_rate_max = deg2rad(12.0) #Degrees per second
-var rotation_rate_change_max = deg2rad(8.0) #Degrees per second
+var rotation_rate_change_max = deg2rad(22.0) #Degrees per second
 ####
 
 var pid_p = 1
@@ -69,9 +73,10 @@ var pid_d = 2
 
 export var isPlayer = false #Sloppy TODO for an entity-component input system for now
 export var aiType = 0
+export var faction_id = 0 #0 is environmental/neutral, 1 is enemy, 2 is player, 3 is allied
 
-var hullpointsmax = 30
-var hullpoints = hullpointsmax
+export var hullpointsmax = 30
+var hullpoints
 var unit_disabled=false
 
 export(Script) var SHIP_CONTROLLER #Component for player or AI input to a ship
@@ -95,6 +100,7 @@ var turn_rate = deg2rad(10)
 var shipstats=null #Imported dictionary that tells a ship what it is
 
 func _ready():
+	hullpoints=hullpointsmax
 	if shipstats:
 		loadShipStats()
 	else:
@@ -158,12 +164,12 @@ func assignThrottleValues():
 #	throttleslots.append(0) #Most/all ships can hit zero throttle.
 	for i in range(4):
 		throttleslots.append(lerp(0,maxspeed,float(i)/3.0))
-	print("Throttle Values: ",throttleslots)
+#	print("Throttle Values: ",throttleslots)
 
 func changeSpeed(newspeed):
-	print("Changed Throttle Setting To ",currentthrottle,"  ,  ",current_velocity)
-	self.current_velocity = newspeed
-	displayNavigation()
+#	print("Changed Throttle Setting To ",currentthrottle,"  ,  ",current_velocity)
+	target_velocity=newspeed
+#	displayNavigation()
 	updateEngineParticles()
 
 func throttleIncrease():
@@ -177,7 +183,7 @@ func throttleDecrease():
 	changeSpeed(throttleslots[currentthrottle])
 
 func getThrottleSpeed():
-	return throttleslots[currentthrottle]
+	return target_velocity
 
 func addMount(size,loc,rot):
 	var newmount = WeaponMount.new(size,loc,rot)
@@ -191,7 +197,7 @@ func loadWeaponMounts():
 	assert(addMount(1,Vector2(25,-7),-80))
 	assert(addMount(1,Vector2(25,7),80))
 	assert(addMount(1,Vector2(-40,0),180))
-	var turrets = ["basic","ballista","scatter",null]
+	var turrets = ["basic","scatter","scatter",null]
 	for mount in mounts:
 		if turrets[mounts.find(mount)]:
 			var newgun = load("res://ShipTurret.tscn").instance()
@@ -200,7 +206,8 @@ func loadWeaponMounts():
 			$Hardpoints.add_child(newgun)
 
 func addTarget(tg):
-	desired_targets.append(tg)
+	if !tg in desired_targets:
+		desired_targets.append(tg)
 func removeTarget(tg):
 	desired_targets.erase(tg)
 	SHIP_CONTROLLER.targetCleared(tg) #Notify the controller that this is no longer a valid target
@@ -211,7 +218,7 @@ func getTargetList():
 
 onready var damageparticles = preload("res://ShipDamageParticles.tscn")
 
-func takeDamage(amt,collision):
+func takeDamage(amt,collision): #Particle emission for impacts. #TODO: read information from a bitmask to determine material type emitting
 	hullpoints -= amt
 	$HealthBar.value=hullpoints
 	if hullpoints <= 0:
@@ -234,6 +241,8 @@ func updateEngineParticles():
 signal disable_target
 signal unit_destroyed
 func die():
+	deccel=deccel*2 #More drag as it sinks
+	target_velocity = target_velocity * (0.2+rand_range(-0.2,0.2))
 	unit_disabled=true
 	self.z_index-=1
 	emit_signal("unit_destroyed",self) #For tracking elimination mission goals
@@ -254,90 +263,81 @@ func die():
 	self.queue_free()
 
 func steeringPID(step,currentval,error,lasterror,steermax):
+	if unit_disabled:
+		return 0
 	if lasterror==null:
 		lasterror=error
 	var predict_pid = error*pid_p + pid_d*(error-lasterror)/step
-	return clamp(predict_pid,-rotation_rate_change_max,rotation_rate_change_max)
+	return predict_pid
 
 var ship_previous_error
 
 func integrateShipMotion(step,p,v,r,rdot,lasterror,targetposition,targetvelocity):
-	var error = Vector2(1,0).rotated(r).angle_to(targetposition-p) #How far off target the ship's current heading is
-	var steer = steeringPID(step,rotation_rate,error,lasterror,rotation_rate_change_max)
+	var error = 0.0
+	if SHIP_CONTROLLER:
+		var navigation_error = 0
+		if waypoint != null:
+			navigation_error = Vector2(1,0).rotated(r).angle_to(targetposition-p)
+		var avoidance_info = SHIP_CONTROLLER.getSteeringAdjust()
+		var avoidance_error = (Vector2(1,0).angle_to(avoidance_info[0]))
+		
+		error = (navigation_error*1 + avoidance_error*avoidance_info[1]*3) / (1+avoidance_info[1]*3) #Weighted average
+		steervector = Vector2(1,0).rotated(error)
+		navvector = Vector2(1,0).rotated(navigation_error)
+	var steer = clamp(steeringPID(step,rotation_rate,error,lasterror,rotation_rate_change_max),-rotation_rate_change_max,rotation_rate_change_max) #Waypoint Steering
 	rdot = clamp(rdot+steer*step,-rotation_rate_max,rotation_rate_max)
-#	print(rdot)
-	#TODO: Acceleration to desired throttle
-	#velocity += acceleration*step
-	#clamp to throttle to prevent overshoot
-	
 	r += rdot*step
-	p += Vector2(current_velocity,0).rotated(r)*step
+	
+	if v < targetvelocity:
+		if targetvelocity-v < accel*step:
+			v=targetvelocity
+		else:
+			v+=accel*step
+	elif v > targetvelocity:
+		if v-targetvelocity < deccel*step:
+			v=targetvelocity
+		else:
+			v-=deccel*step
+	p += Vector2(v,0).rotated(r)*step
 #	ship_previous_error=error
 	return [p,v,r,rdot,error]
-#
-#func integrateMotion(step,prev_error,target,start_p=Vector2(),start_v=0,start_r=0,start_spin=0,start_a=0):
-#	var p = start_p
-#	var v = start_v
-#	var r = start_r
-#	var r_dot = start_spin
-#	var a = start_a
-#	var error = Vector2(1,0).rotated(r).angle_to(target-p)
-#	if prev_error ==null:
-#		prev_error=error
-#	var predict_pid = error*pid_p + pid_d*(error-prev_error)/step
-#	predict_pid = clamp(predict_pid,-spin_change,spin_change)
-#	r_dot = clamp(r_dot+predict_pid*step,-spin_max,spin_max)
-#	v += accel*step
-#	r += r_dot*step
-#	p += Vector2(v,0).rotated(r)*step
-#	return [p,v,r,r_dot,error]
 
 
 func _physics_process(delta):
-#	print(getThrottleSpeed())
 	if getThrottleSpeed():
 		var results = integrateShipMotion(delta,self.position,current_velocity,self.rotation,current_spin,ship_previous_error,waypoint,getThrottleSpeed())
-#		self.position=results[0]
+#		print("Moving by ",results[0],"  ",results[0]-self.global_position)
 		var _collision = move_and_collide(results[0]-self.global_position)
 		current_velocity=results[1]
 		self.rotation=results[2]
 		current_spin = results[3]
 		ship_previous_error=results[4]
-#	applyDrag()
-#	applyThrust()
-#	applyRudderForces()
-#	self.position = self.position + Vector2(current_velocity,0).rotated(self.rotation)*delta
-##	var desiredrotation = self.position.angle_to_point(waypoint)
-#	if $WaypointSprite.visible and to_local(waypoint).length() and current_velocity>0:
-#		var dir = get_angle_to(waypoint)
-#		if abs(dir) < 0.3*delta:
-#			rotation += dir
-#		else:
-#			if dir>0: rotation += turn_rate*delta #clockwise
-#			if dir<0: rotation -= turn_rate*delta #anti - clockwise
 	if current_velocity > 0:
-#		$Line2D.add_point($ShipSprite/EnginePosition.global_position)
 		if $Line2D.points.size() > 190:
 			$Line2D.remove_point(0)
-#	print(self.position.distance_to($WaypointSprite.position))
 	if $WaypointPath.points and $WaypointSprite.visible and self.position.distance_to($WaypointPath.points[0])<1:
 		$WaypointPath.remove_point(0)
 	if self.position.distance_to($WaypointSprite.position)<1:
 		$WaypointSprite.visible=false
 		$WaypointPath.clear_points()
 	update()
+var steervector = Vector2()
+var navvector = Vector2()
+func _draw():
+	if steervector:
+		draw_line(Vector2(),navvector*100,Color(1,1,0),10)
+		draw_line(Vector2(),steervector*100,Color(0,0,1),10)
+	draw_line(Vector2(-50,0),Vector2(-50,0)-Vector2(40,0).rotated(-current_spin),Color(1,1,1),10)
+	for target in desired_targets:
+		draw_line(Vector2(),to_local(target.position),Color(0.8,0.4,0.4,0.7),5)
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.is_pressed() and isPlayer: #Player Inputs
 		if event.button_index == BUTTON_RIGHT:
 			setHeading(get_global_mouse_position())
-#		elif event.button_index == BUTTON_LEFT:
-#			for hardpoint in $Hardpoints.get_children():
-#				pass
-#				hardpoint.setTarget(get_global_mouse_position())
-#				$TargetingSprite.position=get_global_mouse_position()
-#				$TargetingSprite.visible=true
-	
+
+func getFaction():
+	return faction_id
 
 func applyDrag():
 	pass
@@ -354,10 +354,10 @@ func applyRudderForces():
 	pass
 
 func setHeading(loc):
-	waypoint = loc
-	$WaypointSprite.position = waypoint
-	$WaypointSprite.visible=true
-	displayNavigation()
+	if loc != null:
+		waypoint = loc
+		$WaypointSprite.global_position = waypoint
+		$WaypointSprite.visible=true
 
 signal ship_clicked_left
 signal ship_clicked_right
@@ -370,11 +370,13 @@ func registerSignals(to):
 	#Register signals for clicking/hovering/etc into the main combat manager
 
 func displayNavigation():
+#	return
 	predictPath()
 	update()
 
-func predictPath():
-#	print("Predicting Path, throttle = ",getThrottleSpeed())
+func predictPath(): #TODO: for the love of god make this threaded
+	if waypoint==null:
+		return
 	var path = []
 	var p = self.position
 	var v = current_velocity
@@ -398,7 +400,5 @@ func _on_TallShip_input_event(viewport, event, shape_idx):
 		if event.button_index == BUTTON_LEFT:
 			print("Ship Clicked: ",name)
 			emit_signal("ship_clicked_left",self)
-#			if !self.is_in_group("player"):
-#				get_parent().get_node("SelectionIndicator").chooseTarget(self)
 		elif event.button_index == BUTTON_RIGHT:
 			emit_signal("ship_clicked_right",self)

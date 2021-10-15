@@ -1,5 +1,23 @@
 extends Node2D
 
+###GLOBAL TODO
+
+#Load Ship Data From File
+#Create Ship Variants
+#Spellcasting Mounts
+#Manual-Fire Mounts
+#Internal Ship Rooms
+#Internal Room Damage
+#Localized Armor Bitmask
+#Mission Builder
+#Island Graphics
+#Island Mountain Colliders
+#Collision Damage/Run Aground
+#Weapon Groups
+#Weapon Group Editing
+
+
+
 #Signal manager for selection, destruction of ships, etc.
 
 var playercontroller = null
@@ -11,7 +29,9 @@ var scene_data = null
 func _ready():
 	scene_data = SceneSwitcher.takeStack()
 	registerShips()
-	playercontroller.gameworld.assignPlayerShip(playercontroller.ship)
+	$Entities/TallShip.setShipStats(scene_data["ship"])
+	if playercontroller:
+		assignPlayerShip(playercontroller.ship)
 	$ScreenTransition.fadeIn()
 	$MissionStatsRecorder.startMissionRecording()
 
@@ -49,13 +69,14 @@ func shipHovered(sh):
 	pass
 
 func _unhandled_input(event):
-	if event is InputEventMouseButton and event.is_pressed():
-		if event.button_index == BUTTON_RIGHT:
-			playercontroller.shipNavigationOrder(get_global_mouse_position())
-	elif Input.is_action_just_pressed("speed_up"):
-		playercontroller.shipIncreaseSpeed(10)
-	elif Input.is_action_just_pressed("speed_down"):
-		playercontroller.shipDecreaseSpeed(10)
+	if playercontroller:
+		if event is InputEventMouseButton and event.is_pressed():
+			if event.button_index == BUTTON_RIGHT:
+				playercontroller.shipNavigationOrder(get_global_mouse_position())
+		elif Input.is_action_just_pressed("speed_up"):
+			playercontroller.shipIncreaseSpeed(10)
+		elif Input.is_action_just_pressed("speed_down"):
+			playercontroller.shipDecreaseSpeed(10)
 
 
 #SHIP RETURN SIGNALS

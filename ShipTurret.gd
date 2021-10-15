@@ -99,6 +99,8 @@ func hideArc():
 #For now, weapons are autotarget/fire
 
 func _process(delta):
+	if turret_owner.unit_disabled:
+		return
 	if reload > 0:
 		reload  -= delta
 	if currenttarget==null:

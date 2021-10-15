@@ -1,45 +1,106 @@
-Godot Engine v3.3.2.stable.official - https://godotengine.org
-OpenGL ES 3.0 Renderer: NVIDIA GeForce RTX 3060 Laptop GPU/PCIe/SSE2
-OpenGL ES Batching: ON
+Godot Engine v3.2.3.stable.official - https://godotengine.org
+OpenGL ES 3.0 Renderer: GeForce RTX 2080 SUPER/PCIe/SSE2
  
-7 Islands in Q1:
-	Island 2
-	Island 7
-	Island 12
-	Island 14
-	Island 3
-	Island 11
-	Island 8
-8 Islands in Q2:
-	Island 3
-	Island 9
-	Island 14
-	Island 18
-	Island 5
-	Island 24
-	Island 17
-	Island 10
-6 Islands in Q3:
-	Island 4
-	Island 1
-	Island 18
-	Island 10
-	Island 15
-	Island 0
-6 Islands in Q4:
+Finished Loading Ship
+Check data drop
+Check data drop
+Check data drop
+Check data drop
+Check data drop
+Check data drop
+Check data drop
+Can slot accept {turret_icon:[StreamTexture:1245], turret_type:ballista}?
+Can slot accept {turret_icon:[StreamTexture:1245], turret_type:ballista}?
+Can slot accept {turret_icon:[StreamTexture:1245], turret_type:ballista}?
+Acquired data: {turret_icon:[StreamTexture:1245], turret_type:ballista}
+Objective Type: ESCORT
+Objective Type: ELIMINATE
+Objective Type: ELIMINATE
+Objective Type: ELIMINATE
+Objective Type: ELIMINATE
+Registered Ship: PatrolShip
+Registered Ship: PatrolShip2
+Registered Ship: PatrolShip3
+Registered Ship: PatrolShip4
+Registered Ship: TallShip
+5 Islands in Q1:
 	Island 16
-	Island 13
-	Island 8
-	Island 22
+	Island 1
+	Island 10
+	Island 2
+	Island 14
+10 Islands in Q2:
+	Island 11
+	Island 0
 	Island 6
+	Island 7
+	PatrolShip4
+	Island 15
+	PatrolShip3
+	PatrolShip
+	PatrolShip2
+	Island 12
+7 Islands in Q3:
+	Island 17
+	Island 8
+	Island 19
+	Island 12
 	Island 4
+	Island 5
+	TallShip
+6 Islands in Q4:
+	Island 13
+	Island 17
+	Island 9
+	Island 25
+	Island 3
+	Island 8
+Bullet hit PatrolShip2
+Bullet hit PatrolShip
+Bullet hit Island 8
+Bullet hit TallShip
+Bullet hit Island 8
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit PatrolShip4
+Bullet hit TallShip
+Bullet hit PatrolShip3
+Bullet hit TallShip
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit PatrolShip4
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit PatrolShip4
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit TallShip
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit PatrolShip3
+Bullet hit Island 6
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit TallShip
+Bullet hit TallShip
 **ERROR**: Condition "_first != __null" is true.
    At: ./core/self_list.h:112:~List() - Condition "_first != __null" is true.
 **ERROR**: Condition "_first != __null" is true.
    At: ./core/self_list.h:112:~List() - Condition "_first != __null" is true.
 **WARNING**: ObjectDB instances leaked at exit (run with --verbose for details).
-   At: core/object.cpp:2132:cleanup() - ObjectDB instances leaked at exit (run with --verbose for details).
+   At: core/object.cpp:2135:cleanup() - ObjectDB instances leaked at exit (run with --verbose for details).
 **ERROR**: Resources still in use at exit (run with --verbose for details).
-   At: core/resource.cpp:450:clear() - Resources still in use at exit (run with --verbose for details).
+   At: core/resource.cpp:477:clear() - Resources still in use at exit (run with --verbose for details).
 **ERROR**: There are still MemoryPool allocs in use at exit!
-   At: core/pool_vector.cpp:66:cleanup() - Condition "allocs_used > 0" is true.
+   At: core/pool_vector.cpp:69:cleanup() - Condition "allocs_used > 0" is true.
