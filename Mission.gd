@@ -23,18 +23,29 @@ var extraction_type #How does the player ship leave at the end of the battle?
 #Just fade to black for now
 
 signal mission_complete
+signal mission_failed
 signal update_mission_objectives
 signal phase_complete
 
 class MissionObjective:
 	signal objective_completed
+	signal objective_failed
+	signal objective_updated
 	enum objective_types {AREA,ELIMINATE,ESCORT}
+	#AREA: Enter the area(s), 
 	var objective_type = objective_types.AREA
-	var target #The goal area or ship associated with this mission
+	var targets = []#The goal area(s) or unit(s) associated with this mission. TODO: how does this work for multi-target/multi-area
+	var completed = [] #Which goal targets have already been met
+	var failed = []
+	
 	
 	var isClearedAtPhaseEnd=true #Used for optional objectives that can persist for entire missions
 	var isOptional = false
 	var isPointerObjective = true #Decide whether or not an arrow points at this objective at all times
+	var isHiddenObjective = false #Whether or not to display the objective. Primarily used for obvious ones like 'player not dying'
+	var isFailureObjective = false #Objective is not 'completed', can only be failed. Used for escorting stuff.
+	var failuretext = "Replace Failure Text" #Displayed in post-mission stats as reason for mission failure
+	var failThreshold = 0 #How many failures it takes before the objective is considered lost
 	#TODO: Modify this so it can be stuff like search areas, or changing pointer strength/appearance time
 	
 	var objective_text = "Proceed to Location Alpha"
@@ -46,28 +57,42 @@ class MissionObjective:
 	func getText():
 		return objective_text
 	
-	func onGoalComplete(_target):
-		pass
-		#TODO
-		#for now, only have partial/single goal objectives
-		objectiveCompleted()
+	func onGoalComplete(target):
+		if target in targets:
+			if target in completed:
+				print("tried to add a completed target to the list but it's already there! Duplicate signals?")
+			completed.append(target)
+			emit_signal("objective_updated",self)
+			
+			if completed.size() == targets.size():
+				objectiveCompleted()
+	
+	func onGoalFailed(target):
+		failed.append(target)
+		if failed.size()>failThreshold:
+			objectiveFailed()
 	
 	func objectiveCompleted():
 		emit_signal("objective_completed",self)
 		#Once an objective is completed, inform the mission manager
+	
+	func objectiveFailed():
+		emit_signal("objective_failed",self)
 
 
 func setupMission(mng): #Placeholder function to create mission parameters (this'll be done by the mission builder system later)
 	missionmanager=mng
+	playerDeathCondition()
 #	objectives.append(createAreaObjective(Vector2(700,0))) #Basic Area Entry
 	
 	#Kill Patrol Ship Mission (handcoded)
 	var newobj = MissionObjective.new()
 	newobj.objective_type=newobj.objective_types.ELIMINATE
-	newobj.objective_text="Eliminate Enemy Vessel"
-	newobj.target=missionmanager.get_parent().get_parent().get_node("Entities/PatrolShip")
+	newobj.objective_text="Eliminate All Enemy Vessels"
+	for item in missionmanager.get_tree().get_nodes_in_group("ships"):
+		if item.faction_id == 1:
+			newobj.targets.append(item) #TODO: this is backwards, entity here should be passing spawn requests
 	objectives.append(newobj)
-	
 #	newobj = MissionObjective.new()
 #	newobj.objective_type=newobj.objective_types.ELIMINATE
 #	newobj.objective_text="Eliminate Enemy Vessel Again"
@@ -93,6 +118,23 @@ func setupMission(mng): #Placeholder function to create mission parameters (this
 #	objectives.append(createAreaObjective(Vector2(1000,-500),"Rally at Charlie"))
 #	finalizePhase()
 
+func getPlayerShip():
+	for item in missionmanager.get_tree().get_nodes_in_group("ships"):
+		if item.faction_id==2:
+			return item
+
+func playerDeathCondition():
+	#Create an invisible 'escort mission' that tracks the player's ship as a failure condition. TODO: eventually this should be player's entire fleet, yeah?
+	var newobj =MissionObjective.new()
+	newobj.objective_type = newobj.objective_types.ESCORT
+	newobj.targets.append(getPlayerShip())
+	newobj.isFailureObjective=true
+	newobj.isHiddenObjective=false #change for final
+	newobj.isClearedAtPhaseEnd=false
+	newobj.objective_text = "Your Flagship Must Survive!"
+	newobj.failuretext="Your ship was destroyed!"
+	objectives.append(newobj)
+
 func getMissionName():
 	return mission_name
 func getPhaseName():
@@ -111,8 +153,18 @@ func onObjectiveComplete(obj):
 		required_objectives.erase(obj)
 	else:
 		optional_objectives.erase(obj)
+	
+	
 	if required_objectives.size()==0:
 		emit_signal("phase_complete")
+
+func checkObjectivesComplete(): #TODO: check the objectives, ignore the ones that are ESCORT or other non-completable (fail-only) types, exclude from checking.
+	pass
+	for objective in required_objectives:
+		pass
+
+func onObjectiveFailed(obj):
+	emit_signal("mission_failed")
 
 func createAreaObjective(where,desc=null): #Quick hacky utility for making player-usable oneshot areas.
 	var newobj=MissionObjective.new(desc)
@@ -153,14 +205,18 @@ func activateNextPhase():
 		emit_signal("update_mission_objectives")
 
 func connectObjectiveSignals(obj):
-	pass
 	#Link up the goal_completed signal to the Mission Info manager, either from elimination targets or Goal Areas
-#	self.connect()
 	obj.connect("objective_completed",self,"onObjectiveComplete")
-	match obj.objective_type:
-		0:
-			print("Objective Type: AREA")
-			obj.target.connect("goal_completed",obj,"onGoalComplete")
-		1:
-			print("Objective Type: ELIMINATE")
-			obj.target.connect("unit_destroyed",obj,"onGoalComplete")
+	obj.connect("objective_failed",self,"onObjectiveFailed")
+	obj.connect("objective_updated",missionmanager,"updateObjective")
+	for target in obj.targets:
+		match obj.objective_type:
+			obj.objective_types.AREA:
+				print("Objective Type: AREA")
+				target.connect("goal_completed",obj,"onGoalComplete")
+			obj.objective_types.ELIMINATE:
+				print("Objective Type: ELIMINATE")
+				target.connect("unit_destroyed",obj,"onGoalComplete")
+			obj.objective_types.ESCORT:
+				print("Objective Type: ESCORT")
+				target.connect("unit_destroyed",obj,"onGoalFailed")

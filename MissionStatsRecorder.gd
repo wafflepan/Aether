@@ -23,7 +23,6 @@ func getMissionDict():
 	return missiondict
 
 func setMissionInfo(mis):
-	pass
 	#Mission info like name, objectives
 	missiondict["mission_name"]=mis.getMissionName()
 	missiondict["mission_data_full"]=mis
@@ -33,7 +32,6 @@ func startMissionRecording():
 	missiondict["start_time"]=start_time
 
 func recordWeaponFire(weapon,shooter):
-	pass
 	var entry = {"weapon":weapon,"owner":shooter,"time":getMissionTime()}
 
 func getMissionTime():

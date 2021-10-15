@@ -9,7 +9,6 @@ extents = Vector2( 50, 50 )
 script = ExtResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
-current = true
 zoom = Vector2( 8, 8 )
 
 [node name="QuadrantTester" type="Area2D" parent="."]
