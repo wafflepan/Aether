@@ -7,9 +7,8 @@ extends Node2D
 
 
 # Called when the node enters the scene tree for the first time.
-#func _ready():
-#	steerAI()
-#	angle=ship.rotation
+func _ready():
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -192,7 +191,7 @@ func _draw():
 	if debugsteering:
 		var total = Vector2()
 		for line in debugsteering:
-			draw_line($TallShip2.position,line,Color(0.2,0.2,0.2,0.8),10)
+			draw_line($Entities/TallShip2.position,line,Color(0.2,0.2,0.2,0.8),10)
 			total+=line
 		total=total/debugsteering.size()
 		draw_circle(total,60,Color(0.6,0.3,0.3))

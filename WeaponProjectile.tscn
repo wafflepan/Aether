@@ -20,8 +20,8 @@ gravity = Vector3( 0, 0, 0 )
 initial_velocity = 2.0
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
-scale = 6.0
-scale_random = 0.3
+scale = 4.0
+scale_random = 1.0
 color_ramp = SubResource( 2 )
 
 [sub_resource type="Animation" id=4]
@@ -48,7 +48,6 @@ collision_layer = 2
 script = ExtResource( 1 )
 
 [node name="Particles2D" type="Particles2D" parent="."]
-visible = false
 position = Vector2( -6, 0 )
 amount = 100
 lifetime = 1.5
@@ -56,6 +55,7 @@ local_coords = false
 process_material = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 0, -0.5 )
 scale = Vector2( 0.6, 0.6 )
 texture = ExtResource( 2 )
 

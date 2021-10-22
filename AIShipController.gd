@@ -2,12 +2,15 @@ extends Node2D
 
 var ship
 var gameworld
+var pathinfo
 
 var vision_range = 800
 
 var type = "AI_Waypoint_Test"
 
 var seekpoints = [] #List of global coordinate positions this entity is trying to path towards. Generally, scatter a bunch of them around the primary target.
+
+var pathpoints = []
 
 func populateSeekLocations():
 	seekpoints = (get_tree().get_nodes_in_group("seek")) + ship.desired_targets
@@ -20,6 +23,14 @@ func _ready():
 	ship.throttleIncrease()
 	ship.throttleIncrease()
 	populateSeekLocations()
+	call_deferred("mapPathfind",seekSteer())
+	call_deferred("simplifyPathfind")
+	update()
+
+func getPathInfo():
+	pathinfo = ship.get_parent().get_parent().get_node("MapGenerator")
+	if pathinfo:
+		pathinfo = pathinfo.getAstar()
 
 #TODO: have raycast information for hazard avoidance add over several frames to reduce bobbing when rays are lost/gained
 
@@ -49,10 +60,61 @@ func seekSteer():
 	else:
 		return null
 
+func mapPathfind(location):
+	if !pathinfo:
+		getPathInfo()
+#	pathpoints = pathinfo
+	var start = pathinfo.get_closest_point(ship.position)
+	var end = pathinfo.get_closest_point(location)
+	pathpoints = Array(pathinfo.get_point_path(start,end))
+	#Return an array of points for navigating an Astar field
+	#TODO: something in here could be removing certain redundant points
+
+var debugpathfindsimplify_start = Vector2()
+var debugpathfindsimplify_end = Vector2()
+
+func simplifyPathfind():
+	var path=pathpoints
+	var final = [] #List of endpoints
+	if !path.size():
+		return
+	#Starting at the end, raycast from start to end-i until clear shot is found. Repeat process from new starting point until end is reached.
+	var space_state = get_world_2d().direct_space_state
+	var start = path[0]
+	var end_index = path.size()-1
+	var end = path[end_index]
+	while start != end:
+		var result = space_state.intersect_ray(start,end,get_tree().get_nodes_in_group("ships"))
+		if result:
+#			print(result.collider.name)
+			end_index -= 1 #Try again at lower index
+			end = path[end_index]
+		else:
+			final.append(end)
+			start=end
+			end_index=path.size()-1
+			end=path[end_index]
+#		debugpathfindsimplify_end=end
+#		debugpathfindsimplify_start=start
+#		update()
+#		yield(get_tree().create_timer(0.1),"timeout")
+	pathpoints = final
+
+func makeOrientationPath(location,angle):
+	pass
+	#Creates a circular path to put a ship at a desired location facing a desired direction. 
+	#Returns an array of points for the ship to move through.
 
 func _process(delta):
-	populateSeekLocations()
-	ship.setHeading((seekSteer()))
+	pathpoints = []
+	if pathpoints and ship.position.distance_squared_to(pathpoints[0])<(100*100):
+		pathpoints.pop_front()
+	if !pathpoints:
+		populateSeekLocations()
+		mapPathfind(seekSteer())
+		simplifyPathfind()
+	if pathpoints.size():
+		ship.setHeading(pathpoints[0])
 #	ship.setHeading(Vector2(0,0))
 	var target = getClosestTarget()
 	if target:
@@ -126,6 +188,9 @@ func getSteeringAdjust():
 #	return Vector2()
 	return addRaycastEmptyVectors()
 
+func getPathPoints():
+	return pathpoints
+
 func addRaycastEmptyVectors():
 	var total = Vector2(0,0)
 	var count = 0
@@ -151,7 +216,13 @@ func addRaycastEmptyVectors():
 		return [average_vector,weight]
 	else:
 		return [Vector2(),0]
-#func _draw():
+func _draw():
+	draw_line(ship.to_local(debugpathfindsimplify_start),ship.to_local(debugpathfindsimplify_end),Color(1,1,0.6,0.8),100)
+#	draw_set_transform_matrix(ship.get_parent().get_transform().affine_inverse())
+	if pathpoints:
+		for point in pathpoints:
+			draw_circle(ship.to_local(point),45,Color(0,0,1,0.7))
+#		draw_polyline(pathpoints,Color(0,1,1),10,true)
 #	for item in $Raycasts.get_children():
 #		if item.is_colliding():
 ##			print(item.get_collider().name)

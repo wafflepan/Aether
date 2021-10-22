@@ -19,17 +19,17 @@ func clearMount():
 	$TurretIcon.texture=null
 
 func can_drop_data(position, data):
-	print("Can slot accept ",data,"?")
+#	print("Can slot accept ",data,"?")
 	return true
 
 func drop_data(position, data):
 	pass
-	print("Acquired data: ",data)
+#	print("Acquired data: ",data)
 	assignMount(data)
 
 func get_drag_data(position):
 	pass
-	print("DragData")
+#	print("DragData")
 
 
 func _on_ShipHardpointEquipSlot_gui_input(event):

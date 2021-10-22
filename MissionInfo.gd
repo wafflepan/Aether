@@ -34,18 +34,19 @@ func loadMissionObjectives():
 	for objective in mission.getObjectives():
 #		if !objective in active_objectives: #Only do for objectives that aren't still in the list from last phase!
 		objective.connect("objective_completed",self,"onObjectiveComplete")
-		var lab = RichTextLabel.new()
-		lab.bbcode_enabled=true
-		lab.fit_content_height=true
-		lab.bbcode_text = objective.getText()
-		objectivelist.add_child(lab)
 		active_objectives.append(objective)
 		for t in objective.targets:
 			if objective.objective_type == objective.objective_types.AREA and !(t.get_parent()):
 				get_parent().get_parent().get_node("MissionData").add_child(t)
 			if objective.isPointerObjective:
 				addPointerObjective(t)
-		updateObjective(objective)
+		if !objective.isHiddenObjective:
+			var lab = RichTextLabel.new()
+			lab.bbcode_enabled=true
+			lab.fit_content_height=true
+			lab.bbcode_text = objective.getText()
+			objectivelist.add_child(lab)
+			updateObjective(objective)
 	#		else:
 #			print(objective," still in list from last time! Ignoring.")
 
@@ -110,7 +111,7 @@ func clearMissionObjectiveList():
 
 func updateObjective(obj):
 	#For a given objective, update its entry. This is used for changing mission parameters mid-fight, or updating partial completion.
-	if obj in active_objectives:
+	if obj in active_objectives and !obj.isHiddenObjective:
 		for t in obj.completed:
 			if t in pointer_targets:
 				removePointerObjective(t)

@@ -24,7 +24,7 @@ func assignShip(sh):
 	#Assign the ship that's going to be displayed, then update the model
 	loadPoly()
 	placeMounts()
-	print("Finished Loading Ship")
+#	print("Finished Loading Ship")
 
 func getShipMounts():
 	var list = []

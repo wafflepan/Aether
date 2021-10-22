@@ -15,9 +15,9 @@ func get_drag_data(position):
 	return {"turret_type":wp.turret_name,"turret_icon":GlobaLturretStats.getTurretIconFromType(wp.turret_name)}
 
 func can_drop_data(_pos,data):
-	print("Check data drop")
+#	print("Check data drop")
 	return true
 
 func drop_data(_pos,data):
-	print("Drop data")
+#	print("Drop data")
 	pass

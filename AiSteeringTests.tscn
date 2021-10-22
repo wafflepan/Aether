@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://AiSteeringTests.gd" type="Script" id=1]
 [ext_resource path="res://AIShipController.gd" type="Script" id=2]
 [ext_resource path="res://targetbeacon.tscn" type="PackedScene" id=3]
 [ext_resource path="res://enemypip_wip.png" type="Texture" id=4]
 [ext_resource path="res://TallShip.tscn" type="PackedScene" id=5]
+[ext_resource path="res://MapGenerator.tscn" type="PackedScene" id=6]
 [ext_resource path="res://icon.png" type="Texture" id=7]
 
 [node name="AiSteeringTests" type="Node2D"]
@@ -22,11 +23,6 @@ texture = ExtResource( 4 )
 
 [node name="Tween" type="Tween" parent="."]
 
-[node name="TallShip2" parent="." instance=ExtResource( 5 )]
-position = Vector2( -34.9955, 209.355 )
-rotation = 3.03257
-SHIP_CONTROLLER = ExtResource( 2 )
-
 [node name="TerrainTest" type="StaticBody2D" parent="."]
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="TerrainTest"]
@@ -38,7 +34,7 @@ polygon = PoolVector2Array( -233.962, 20.8898, 144.205, 23.2683, 145.395, -178.8
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( -29.1181, 208.59 )
 current = true
-zoom = Vector2( 0.8, 0.8 )
+zoom = Vector2( 5, 5 )
 
 [node name="Centerpoint" type="Node2D" parent="."]
 
@@ -47,10 +43,13 @@ modulate = Color( 1, 1, 1, 0.4 )
 texture = ExtResource( 7 )
 
 [node name="Seek2" parent="." instance=ExtResource( 3 )]
-position = Vector2( -262.125, 373.263 )
+position = Vector2( 2617.55, 466.458 )
 
-[node name="Seek3" parent="." instance=ExtResource( 3 )]
-position = Vector2( 289.341, 535.407 )
+[node name="Entities" type="Node2D" parent="."]
 
-[node name="Seek4" parent="." instance=ExtResource( 3 )]
-position = Vector2( 138.779, 227.156 )
+[node name="TallShip2" parent="Entities" instance=ExtResource( 5 )]
+position = Vector2( -1809.17, -1300.8 )
+rotation = 3.03257
+SHIP_CONTROLLER = ExtResource( 2 )
+
+[node name="MapGenerator" parent="." instance=ExtResource( 6 )]

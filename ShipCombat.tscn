@@ -216,22 +216,7 @@ theme = ExtResource( 10 )
 [node name="Entities" type="Node2D" parent="."]
 
 [node name="PatrolShip" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 423.354, -287.831 )
-faction_id = 1
-SHIP_CONTROLLER = ExtResource( 19 )
-
-[node name="PatrolShip2" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 441.129, -161.807 )
-faction_id = 1
-SHIP_CONTROLLER = ExtResource( 19 )
-
-[node name="PatrolShip3" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 737.966, -340.918 )
-faction_id = 1
-SHIP_CONTROLLER = ExtResource( 19 )
-
-[node name="PatrolShip4" parent="Entities" instance=ExtResource( 1 )]
-position = Vector2( 472.242, -464.53 )
+position = Vector2( 529.342, -230.395 )
 faction_id = 1
 SHIP_CONTROLLER = ExtResource( 19 )
 

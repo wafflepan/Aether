@@ -155,13 +155,14 @@ func onObjectiveComplete(obj):
 		optional_objectives.erase(obj)
 	
 	
-	if required_objectives.size()==0:
+	if checkObjectivesComplete():
 		emit_signal("phase_complete")
 
 func checkObjectivesComplete(): #TODO: check the objectives, ignore the ones that are ESCORT or other non-completable (fail-only) types, exclude from checking.
-	pass
 	for objective in required_objectives:
-		pass
+		if !(objective.isFailureObjective or objective.objective_type == objective.objective_types.ESCORT): #Look for remaining objectives to complete
+			return false#objectives remain
+	return true#Otherwise, cleared for next phase!
 
 func onObjectiveFailed(obj):
 	emit_signal("mission_failed")
@@ -184,8 +185,8 @@ func finalizePhase():
 	objectives=[]
 
 func activateNextPhase():
-	if required_objectives.size(): #This should never happen unless the mission has a fail phase!
-		print("MOVING TO NEXT PHASE WITHOUT COMPLETION OF ALL OBJECTIVES")
+#	if required_objectives.size(): #This should never happen unless the mission has a fail phase!
+#		print("MOVING TO NEXT PHASE WITHOUT COMPLETION OF ALL OBJECTIVES")
 	for x in optional_objectives: #Erase the non-persistent optional objectives
 		if x.isClearedAtPhaseEnd: #TODO: stuff here to disconnect signals cleanly, some kind of removeObjective call to the MissionInfo
 			optional_objectives.erase(x)
@@ -212,11 +213,11 @@ func connectObjectiveSignals(obj):
 	for target in obj.targets:
 		match obj.objective_type:
 			obj.objective_types.AREA:
-				print("Objective Type: AREA")
+#				print("Objective Type: AREA")
 				target.connect("goal_completed",obj,"onGoalComplete")
 			obj.objective_types.ELIMINATE:
-				print("Objective Type: ELIMINATE")
+#				print("Objective Type: ELIMINATE")
 				target.connect("unit_destroyed",obj,"onGoalComplete")
 			obj.objective_types.ESCORT:
-				print("Objective Type: ESCORT")
+#				print("Objective Type: ESCORT")
 				target.connect("unit_destroyed",obj,"onGoalFailed")

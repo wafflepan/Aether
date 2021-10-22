@@ -315,9 +315,9 @@ func _physics_process(delta):
 	if current_velocity > 0:
 		if $Line2D.points.size() > 190:
 			$Line2D.remove_point(0)
-	if $WaypointPath.points and $WaypointSprite.visible and self.position.distance_to($WaypointPath.points[0])<1:
+	if $WaypointPath.points and $WaypointSprite.visible and self.position.distance_squared_to($WaypointPath.points[0])<10:
 		$WaypointPath.remove_point(0)
-	if self.position.distance_to($WaypointSprite.position)<1:
+	if self.position.distance_squared_to($WaypointSprite.position)<10:
 		$WaypointSprite.visible=false
 		$WaypointPath.clear_points()
 	update()
@@ -352,6 +352,10 @@ func getMaxSpeed():
 
 func applyRudderForces():
 	pass
+
+func setPath():
+	pass
+	
 
 func setHeading(loc):
 	if loc != null:

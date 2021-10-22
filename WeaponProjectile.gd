@@ -41,8 +41,10 @@ func setupProjectile(data):
 func setTexture(t):
 	$Sprite.texture=t
 
+signal bullet_hit_target
+
 func hitTarget(col):
-	print("Bullet hit ",col.collider.name)
+#	print("Bullet hit ",col.collider.name)
 	if col.collider.has_method("takeDamage"):
 		col.collider.takeDamage(damage,col)
 		$AnimationPlayer.play("explosion")
