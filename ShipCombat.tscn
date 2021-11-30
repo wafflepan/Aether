@@ -220,9 +220,7 @@ position = Vector2( 529.342, -230.395 )
 faction_id = 1
 SHIP_CONTROLLER = ExtResource( 19 )
 
-[node name="TallShip" parent="Entities" groups=[
-"seek",
-] instance=ExtResource( 1 )]
+[node name="TallShip" parent="Entities" groups=["seek"] instance=ExtResource( 1 )]
 position = Vector2( 561.679, 424.643 )
 rotation = -0.998477
 faction_id = 2

@@ -26,8 +26,8 @@ func _physics_process(delta):
 			hitTarget(collide)
 	projectilespeed = max(0,projectilespeed-projectiledragco*projectilespeed*delta)
 	lifetime -= delta
-	if lifetime <= 0:
-		self.queue_free()
+	if lifetime <= 0 or projectilespeed == 0:
+		fadeout()
 
 func setupProjectile(data):
 	var projectile=self
@@ -53,4 +53,16 @@ func hitTarget(col):
 		projectilespeed=0
 		$ExplosionSprite.visible=true
 		yield($AnimationPlayer,"animation_finished")
-	self.queue_free()
+		$ExplosionSprite.visible=false
+	remove()
+
+func fadeout():
+	$AnimationPlayer.play("fadeout")
+	remove()
+
+func remove():
+	$Particles2D.emitting=false
+	$CollisionShape2D.disabled=true
+	set_physics_process(false)
+	yield(get_tree().create_timer(0.5+$Particles2D.lifetime),"timeout")
+	queue_free()

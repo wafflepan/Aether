@@ -47,9 +47,7 @@ _data = [ Vector2( 0, 0.109091 ), 0.0, 0.0, 0, 0, Vector2( 0.680412, 0.454545 ),
 radius = 15.0
 height = 80.0
 
-[node name="TallShip" type="KinematicBody2D" groups=[
-"ships",
-]]
+[node name="TallShip" type="KinematicBody2D" groups=["ships"]]
 input_pickable = true
 script = ExtResource( 1 )
 
@@ -133,4 +131,5 @@ __meta__ = {
 [node name="ShipOutline" type="Polygon2D" parent="."]
 visible = false
 polygon = PoolVector2Array( -44, 0, -43, -4, -29, -19, -16, -17, -16, -13, 28, -8, 52, -8, 52, 8, 28, 8, -16, 13, -16, 17, -29, 19, -43, 4 )
+
 [connection signal="input_event" from="." to="." method="_on_TallShip_input_event"]
