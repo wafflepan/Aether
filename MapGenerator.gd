@@ -92,17 +92,17 @@ var displaypath = []
 var selectednode1
 var selectednode2
 
-func _input(event):
-	if event is InputEventMouseButton and event.is_pressed():
-		pass
-		if event.button_index == BUTTON_LEFT:
-			selectednode1 = debugastar.get_closest_point(get_global_mouse_position())
-		elif event.button_index == BUTTON_RIGHT:
-			selectednode2 = debugastar.get_closest_point(get_global_mouse_position())
-		
-		if selectednode1 and selectednode2:
-			displaypath = debugastar.get_point_path(selectednode1,selectednode2)
-			update()
+#func _input(event):
+#	if event is InputEventMouseButton and event.is_pressed():
+#		pass
+#		if event.button_index == BUTTON_LEFT:
+#			selectednode1 = debugastar.get_closest_point(get_global_mouse_position())
+#		elif event.button_index == BUTTON_RIGHT:
+#			selectednode2 = debugastar.get_closest_point(get_global_mouse_position())
+#
+#		if selectednode1 and selectednode2:
+#			displaypath = debugastar.get_point_path(selectednode1,selectednode2)
+#			update()
 
 var testshape = null
 var testtransform = null
@@ -183,7 +183,7 @@ func islandTooClose(isl,arr,r):
 			return true
 	return false
 
-func _draw():
+#func _draw():
 #	if testshape:
 ##		print(testtransform.origin)
 #		draw_rect(Rect2(testtransform.origin,testshape.extents),Color(1,0,0))
@@ -196,12 +196,12 @@ func _draw():
 #	for q in quadrants:
 ##		print(q)
 #		draw_rect(q,Color(1,0,0,0.5),false,8)
-	if selectednode1:
-		draw_circle(debugastar.get_point_position(selectednode1),50,Color(1,1,1))
-	if selectednode2:
-		draw_circle(debugastar.get_point_position(selectednode2),50,Color(1,1,1))
-	if displaypath.size():
-		draw_polyline(displaypath,Color(0.3,1,1),20,true)
+#	if selectednode1:
+#		draw_circle(debugastar.get_point_position(selectednode1),50,Color(1,1,1))
+#	if selectednode2:
+#		draw_circle(debugastar.get_point_position(selectednode2),50,Color(1,1,1))
+#	if displaypath.size()>1:
+#		draw_polyline(displaypath,Color(0.3,1,1),20,true)
 
 var sort_distance_point = Vector2()
 func sortIslandDistance(center,islands):

@@ -22,3 +22,5 @@ polygon = PoolVector2Array( -44, 0, -43, -4, -29, -19, -16, -17, -16, -13, 28, -
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.2, 0.2 )
+
+[node name="Hitboxes" type="Node2D" parent="."]

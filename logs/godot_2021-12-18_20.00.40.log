@@ -6,8 +6,12 @@ Bullet hit Engines
 Bullet hit Bridge
 Bullet hit Ammo
 Bullet hit Crew
-Room: Engines  ID: 0
+Bullet hit Gunnery
+Room: Crew  ID: 2
 Bullet hit Engines
 Bullet hit Bridge
+Bullet hit Ammo
+Bullet hit Engines
+Bullet hit Ammo
 Bullet hit Crew
 Bullet hit Gunnery

@@ -59,13 +59,13 @@ var currentthrottle = 0
 var target_velocity = 0
 
 var accel = 25
-var deccel = 15
+var deccel = 5
 
 var rotation_rate = 0.0
 
 ####
-var rotation_rate_max = deg2rad(12.0) #Degrees per second
-var rotation_rate_change_max = deg2rad(22.0) #Degrees per second
+var rotation_rate_max = deg2rad(15.0) #Degrees per second
+var rotation_rate_change_max = deg2rad(5.0) #Degrees per second
 ####
 
 var pid_p = 1
@@ -169,7 +169,7 @@ func assignThrottleValues():
 func changeSpeed(newspeed):
 #	print("Changed Throttle Setting To ",currentthrottle,"  ,  ",current_velocity)
 	target_velocity=newspeed
-#	displayNavigation()
+	displayNavigation()
 	updateEngineParticles()
 
 func throttleIncrease():

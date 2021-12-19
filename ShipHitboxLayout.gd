@@ -16,11 +16,13 @@ class ShipRoom:
 	var room_weight = null
 	var pos = null
 	var polycolor = Color(.2,.2,.2,.4)
-	func _init(num,rname,weight=1,loc=Vector2()):
+	var poly_size_offset = 0
+	func _init(num,rname,weight=1,loc=Vector2(),polybuffer=0):
 		id = num
 		room_name = rname
 		room_weight = weight
 		pos=loc
+		poly_size_offset=-polybuffer
 	func addTLink(r):
 		if !triangle_links.has(r):
 			triangle_links.append(r)
@@ -43,27 +45,46 @@ func _ready():
 	font.font_data = f_data
 	debug_font = font
 	generateRooms()
-#	generateRoomPolygons(shiprooms)
 	splitRoomPolygons(shiprooms)
 	finalizePolygons(shiprooms)
+	makeHitboxes(shiprooms)
+
+func makeHitboxes(rooms):
+#	var full = CollisionPolygon2D.new()
+#	full.polygon = $ShipOutline.polygon
+#	$Hitboxes.add_child(full)
+	for room in rooms:
+		var box = KinematicBody2D.new()
+		var newcollider = CollisionPolygon2D.new()
+		newcollider.polygon=room.poly
+		newcollider.name = room.room_name
+		box.name = room.room_name
+		$Hitboxes.add_child(box)
+		box.add_child(newcollider)
 
 func finalizePolygons(rooms:Array):
-	pass
+	for room in rooms:
+		var results = Geometry.offset_polygon_2d(room.poly,-1.5+room.poly_size_offset)
+		if results:
+			room.poly = results[0]
 	
 
 func generateRooms():
 	var offset =Vector2(0,0)
 	var engines = ShipRoom.new(0,"Engines",1.25,Vector2(-25,0)+offset)
-	var bridge = ShipRoom.new(1,"Bridge",.9,Vector2(-10,0)+offset)
+	var bridge = ShipRoom.new(1,"Bridge",.9,Vector2(-10,0)+offset,1)
 	var crew = ShipRoom.new(2,"Crew",.9,Vector2(10,-4)+offset)
 	var munitions = ShipRoom.new(3,"Ammo",1,Vector2(4,3))
 	var guns = ShipRoom.new(4,"Gunnery",1.1,Vector2(30,0))
 	var mall = ShipRoom.new(5,"Mall",.51,Vector2(30,3))
-	shiprooms = [engines,bridge,crew,munitions,guns,mall]
+	shiprooms = [engines,crew,munitions,bridge,guns,mall]
 #	shiprooms = [engines,bridge,crew]
+#	shiprooms = [engines]
 
 var debug_lines = {}
+var debug_raycast = Vector2()
 var midpointvectors = {}
+var debug_raycast_results = []
 
 var room_dict = {}
 
@@ -99,55 +120,73 @@ func splitRoomPolygons(rooms:Array):
 							current_room.poly = result_poly
 							break
 
-func generateRoomPolygons(rooms:Array):
-	var roompoints=[]
-	var roomweights = []
-	for r in rooms:
-		roompoints.append(r.pos)
-		roomweights.append(r.room_weight)
-	var del = Geometry.triangulate_delaunay_2d(roompoints)
-	print(del)
-	var outside_edges = [] #List of edge pairs that have no corresponding pair (no shared triangles)
-	var inside_edges = [] #List of edge pairs that have duplicates
-	del_debug = del
-	del_points = roompoints
-	var triangles = []
-	for i in range(0,del.size(),3):
-		rooms[del[i]].addTLink(rooms[del[i+1]])
-		rooms[del[i]].addTLink(rooms[del[i+2]])
-		rooms[del[i+1]].addTLink(rooms[del[i+2]])
-		rooms[del[i+1]].addTLink(rooms[del[i]])
-		rooms[del[i+2]].addTLink(rooms[del[i]])
-		rooms[del[i+2]].addTLink(rooms[del[i+1]])
-		
-		#Test whether the edge already exists in either list, if not then add it to outside edges.
-		#Otherwise, add it to the inside_edges list and erase from outside edges
-		
-		for offset in range(0,3): #Iterate through all three points and check inside/outside
-			var x = del[i+offset]
-			var y = del[i+fposmod(offset+1,3)]
-			var pair = Vector2(min(x,y),max(x,y))
-			if pair in outside_edges or pair in inside_edges:
-				outside_edges.erase(pair)
-				if !pair in inside_edges:
-					inside_edges.append(pair)
-			else:
-				outside_edges.append(pair)
-		triangles.append(centroid([rooms[del[i]].pos,rooms[del[i+1]].pos,rooms[del[i+2]].pos],[rooms[del[i]].room_weight,rooms[del[i+1]].room_weight,rooms[del[i+2]].room_weight]))
-		
-	for i in triangles.size(): #For each triangle centroid:
-		pass
-		
-	outside_debug=outside_edges
-	
-	centroids_debug = triangles
-	update()
+var firing_point = Vector2()
 
 func _input(event):
-	if event is InputEventMouseButton and event.is_pressed() and event.button_index == BUTTON_LEFT:
-		for r in shiprooms:
-			r.polycolor = Color(.5,.5,.5,.4)
-		printClosestRoomInfo(get_global_mouse_position())
+	if event is InputEventMouseButton and event.is_pressed():
+		if event.button_index == BUTTON_LEFT:
+			for r in shiprooms:
+				r.polycolor = Color(.5,.5,.5,.4)
+			printClosestRoomInfo(get_global_mouse_position())
+		elif event.button_index == BUTTON_MIDDLE:
+			firing_point = get_global_mouse_position()
+			debug_raycast = [firing_point , firing_point + Vector2(0,100)]
+			projectileRoomRaycast(firing_point,firing_point+Vector2(0,100),100)
+			update()
+		elif event.button_index == BUTTON_RIGHT:
+			pass
+			debug_raycast = [firing_point , get_global_mouse_position()]
+			projectileRoomRaycast(firing_point,get_global_mouse_position(),100)
+			var bullet = load("res://WeaponProjectile.tscn").instance()
+			bullet.position = firing_point
+			bullet.firedby = self
+			bullet.accuracy = 100
+			bullet.rotation = (get_global_mouse_position()-firing_point).angle()
+			var turretdata = GlobaLturretStats.getTurretData("basic")
+			bullet.setupProjectile(turretdata)
+			self.add_child(bullet)
+			update()
+
+var debugdistpoints = []
+var distSortOrigin = Vector2()
+func distSort(a,b):
+	if distSortOrigin.distance_squared_to(a) < distSortOrigin.distance_squared_to(b):
+		return true
+	return false
+
+func projectileRoomRaycast(start,vec,pen):
+	return
+	distSortOrigin = start
+	debug_raycast_results=[]
+	var room_point_list = []
+#	print("Raycast Test starting at ",start," to ",vec)
+	var result_list = {}
+	var line = PoolVector2Array([start,vec])
+	var ship_total = Geometry.intersect_polyline_with_polygon_2d([start,vec],$ShipOutline.polygon)
+	var impact_start
+	if !ship_total:
+		return
+	else:
+		impact_start = ship_total[0]
+		room_point_list = [ship_total[0][0]]
+		for room in shiprooms:
+			var pol = room.poly
+			var results = Geometry.intersect_polyline_with_polygon_2d(line,pol)
+			if results:
+				room_point_list.append_array(results[0])
+				debug_raycast_results.append(results[0])
+				result_list[room] = results[0]
+		room_point_list.append(ship_total[0][1])
+		print(room_point_list)
+		room_point_list.sort_custom(self,"distSort")
+		print(room_point_list)
+		debugdistpoints = room_point_list
+		for point in room_point_list:
+			print(start.distance_squared_to(point))
+#		print("Raycast Results:")
+#		for room in result_list:
+#			if result_list[room].size():
+#				print("Room: ",room.room_name,"  Segment Length: ",result_list[room][0].distance_to(result_list[room][1]))
 
 func printClosestRoomInfo(pos):
 	var c = null
@@ -183,10 +222,7 @@ func centroid(points:Array,weights:Array):
 	return sum
 
 func drawRoomPolygons(rooms):
-#	print(rooms)
-#	draw_polygon(rooms.back().poly,PoolColorArray([Color(randf(),randf(),randf(),0.4)]))
 	for i in rooms.size():
-#		print(room.poly)
 		if rooms[i].poly:
 			var color = Color(1 - float(i/rooms.size()),0 + float(i)/rooms.size(),0.5,0.5)
 			draw_polygon(rooms[i].poly,PoolColorArray([color]))
@@ -195,23 +231,16 @@ var del_points = []
 var centroids_debug = []
 var outside_debug = []
 var debug_font = null
+
 func _draw():
-#	font.font_data = load("res://Lobster-Regular.ttf")
-#	font.size = 2
-	drawRoomPolygons(shiprooms)
+#	drawRoomPolygons(shiprooms)
 	for point in del_points:
 		draw_circle(point,.8,Color(1,0,0))
-#	for i in range(0,del_debug.size(),3):
-#		draw_line(del_points[del_debug[i]],del_points[del_debug[i+1]],Color(0,1,1))
-#		draw_line(del_points[del_debug[i+1]],del_points[del_debug[i+2]],Color(0,1,1))
-#		draw_line(del_points[del_debug[i+2]],del_points[del_debug[i]],Color(0,1,1))
-#	for i in range(centroids_debug.size()):
-#		draw_circle(centroids_debug[i],1,Color(0,0,0))
-#		draw_string(debug_font,centroids_debug[i],str(i))
-#	for linepair in outside_debug:
-#		draw_line(del_points[linepair.x],del_points[linepair.y],Color(0,.21,.41,.5),2)
-#	for room in debug_lines:
-#		for vec in debug_lines[room]:
-#			draw_line(room.pos,room.pos+vec,Color(1,0.56,0.2,0.8),1)
-#	for point in midpointvectors:
-#		draw_line(point-midpointvectors[point]*5,point+midpointvectors[point]*5,Color(0,0,0.5),2)
+	draw_circle(firing_point,10,Color(0,0,0))
+#	if debug_raycast:
+#		draw_line(debug_raycast[0],debug_raycast[1],Color(0,1,1),1)
+#		for linepair in debug_raycast_results:
+#			draw_circle(linepair[0],2,Color(1,0,0))
+#			draw_circle(linepair[1],2,Color(0,1,1))
+	for i in debugdistpoints.size():
+		draw_circle(debugdistpoints[i],1.5,Color(0.1+i/10.0,0.1+i/10.0,0.1+i/10.0,.8))

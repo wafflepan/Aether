@@ -12,7 +12,7 @@ extends Node2D
 #Mission Builder
 #Island Graphics
 #Island Mountain Colliders
-#Collision Damage/Run Aground
+#Collision Damage/Run Aground/Bump Ships
 #Weapon Groups
 #Weapon Group Editing
 
@@ -29,7 +29,8 @@ var scene_data = null
 func _ready():
 	scene_data = SceneSwitcher.takeStack()
 	registerShips()
-	$Entities/TallShip.setShipStats(scene_data["ship"])
+	if scene_data:
+		$Entities/TallShip.setShipStats(scene_data["ship"])
 	if playercontroller:
 		assignPlayerShip(playercontroller.ship)
 	$ScreenTransition.fadeIn()
